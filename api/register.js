@@ -6,7 +6,7 @@ const fetch = require('node-fetch');                                    // node 
 const { TextEncoder, TextDecoder } = require('util');                   // node only; native TextEncoder/Decoder
 //const { TextEncoder, TextDecoder } = require('text-encoding');          // React Native, IE11, and Edge Browsers only
 
-const rpc = new JsonRpc('http://127.0.0.1:6666', { fetch });
+const rpc = new JsonRpc('http://127.0.0.1:8000', { fetch });
 const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
 router.post('/', async (req, res) => {
