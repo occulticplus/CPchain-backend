@@ -1,3 +1,4 @@
+
 const router = require('express').Router()
 
 const { Api, JsonRpc, RpcError } = require('eosjs');
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
                     owner: {
                         threshold: 1,
                         keys: [{
-                            key: msg.key,
+                            key: api.convertLegacyPublicKey(msg.key),
                             weight: 1
                         }],
                         accounts: [],
@@ -39,7 +40,7 @@ router.post('/', async (req, res) => {
                     active: {
                         threshold: 1,
                         keys: [{
-                            key: msg.key,
+                            key: api.convertLegacyPublicKey(msg.key),
                             weight: 1
                         }],
                         accounts: [],
