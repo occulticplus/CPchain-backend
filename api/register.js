@@ -1,4 +1,3 @@
-
 const router = require('express').Router()
 
 const { Api, JsonRpc, RpcError } = require('eosjs');
@@ -6,7 +5,7 @@ const { signatureProvider } = require('eosjs/dist/eosjs-jssig');      // develop
 const fetch = require('node-fetch');                                    // node only; not needed in browsers
 const { TextEncoder, TextDecoder } = require('util');                   // node only; native TextEncoder/Decoder
 //const { TextEncoder, TextDecoder } = require('text-encoding');          // React Native, IE11, and Edge Browsers only
-
+const numeric = require('eosjs/dist/eosjs-numeric');
 const rpc = new JsonRpc('http://127.0.0.1:8000', { fetch });
 const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
@@ -31,7 +30,7 @@ router.post('/', async (req, res) => {
                     owner: {
                         threshold: 1,
                         keys: [{
-                            key: api.convertLegacyPublicKey(msg.key),
+                            key: numeric.convertLegacyPublicKey(msg.key),
                             weight: 1
                         }],
                         accounts: [],
@@ -40,7 +39,7 @@ router.post('/', async (req, res) => {
                     active: {
                         threshold: 1,
                         keys: [{
-                            key: api.convertLegacyPublicKey(msg.key),
+                            key: numeric.convertLegacyPublicKey(msg.key),
                             weight: 1
                         }],
                         accounts: [],
