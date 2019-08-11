@@ -4,9 +4,13 @@ router.get('/', (req, res) => {
     // res.send('this is a blank.')
     res.json(
         {
-            'status': 404,
-            'content': req.params.r
+            'status': 302,
+            'else': req.params.r
         })
+})
+
+router.get('/oo/', (req, res) => {
+    res.send('this is a blank.')
 })
 
 module.exports = router
