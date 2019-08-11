@@ -1,11 +1,14 @@
 const router = require('express').Router()
 
-const { Api, JsonRpc, RpcError } = require('eosjs');
-const { signatureProvider } = require('eosjs/dist/eosjs-jssig');      // development only
+const { Api, JsonRpc, RpcError, Numeric } = require('eosjs');
+const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig');      // development only
 const fetch = require('node-fetch');                                    // node only; not needed in browsers
 const { TextEncoder, TextDecoder } = require('util');                   // node only; native TextEncoder/Decoder
 //const { TextEncoder, TextDecoder } = require('text-encoding');          // React Native, IE11, and Edge Browsers only
-const numeric = require('eosjs/dist/eosjs-numeric');
+
+const privateKeys = [];
+
+const signatureProvider = new JsSignatureProvider(privateKeys);
 const rpc = new JsonRpc('http://127.0.0.1:8000', { fetch });
 const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
@@ -30,7 +33,7 @@ router.post('/', async (req, res) => {
                     owner: {
                         threshold: 1,
                         keys: [{
-                            key: numeric.convertLegacyPublicKey(msg.key),
+                            key: Numeric.convertLegacyPublicKey(msg.key),
                             weight: 1
                         }],
                         accounts: [],
@@ -39,7 +42,7 @@ router.post('/', async (req, res) => {
                     active: {
                         threshold: 1,
                         keys: [{
-                            key: numeric.convertLegacyPublicKey(msg.key),
+                            key: Numeric.convertLegacyPublicKey(msg.key),
                             weight: 1
                         }],
                         accounts: [],
@@ -55,7 +58,10 @@ router.post('/', async (req, res) => {
         res.send("Successfully created account!");
     } catch (e) {
         console.log(e);
-        res.reject("Error : something went wrong.");
+        res.json({
+            'status' : 114514,
+            'message' : "Something went wrong"
+        });
     }
 })
 
