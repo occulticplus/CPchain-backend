@@ -113,7 +113,7 @@ router.post('/', async (req, res) => {
             console.log(accountInfo.privateKey);
             const sigProvider = new JsSignatureProvider([accountInfo.privateKey]);
             return new Api({ rpc,
-                sigProvider,
+                signatureProvider: sigProvider,
                 textDecoder: new TextDecoder(),
                 textEncoder: new TextEncoder()
             }).transact({
@@ -135,6 +135,9 @@ router.post('/', async (req, res) => {
                 expireSeconds: 30,
             })
 
+        }).catch((value)=>{
+            console.log(value);
+            throw new Error('promise rejected');
         }).then(()=>{
             console.log('Wallet Information :\n' + walletInfo);
             res.render('200', {
