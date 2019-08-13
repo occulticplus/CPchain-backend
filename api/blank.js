@@ -9,18 +9,29 @@ const { TextEncoder, TextDecoder } = require('util');                   // node 
 
 const rpc = new JsonRpc('http://127.0.0.1:8000', { fetch });
 const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+const request = require('request');
 
 router.get('/', (req, res) => {
-    // res.send('this is a blank.')
-    res.json(
-        {
-            'status': 302,
-            'else': req.params.r
-        })
+    // res.send('this is a blank.'
+    const a = 'as';
+    const b = 'we can';
+    console.log('henlo friend');
+    try {
+        request({url: 'http://127.0.0.1:3000/api/blank/foo/', method: 'POST', header: 'application/json', body: JSON.stringify([a, b])},
+            (error, response, body) => {
+                if (error) throw new Error(error);
+                console.log(body);
+            }
+        );
+    } catch(e) {
+        console.log(e);
+    }
 })
 
-router.get('/oo/', (req, res) => {
-    res.send('this is a blank.')
+router.post('/foo/', (req, res) => {
+    console.log('may i acuqire a bespo');
+    console.log(req.body);
+    //res.send('this is a blank.')
 })
 
 router.get('/num/', (req, res) => {

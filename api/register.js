@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
             walletInfo += 'Account Private Key : ' + privateKey + '\n';
             walletInfo += 'Account Public Key : ' + Ecc.privateToPublic(privateKey) + '\n';
             options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
-            options.body = ['"' + msg.walletName + '"', '"' + privateKey + '"'];
+            options.body = JSON.stringify([msg.walletName, accountInfo.privateKey]);
             options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
             request(options, (error, response, body) => {
                 if (error) throw new Error(error);
