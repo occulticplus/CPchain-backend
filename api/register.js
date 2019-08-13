@@ -72,45 +72,46 @@ router.post('/', async (req, res) => {
                 if (error) throw new Error(error);
                 console.log(body);
             })
+            return api.transact({
+                actions: [{
+                    account: 'eosio',
+                    name: 'newaccount',
+                    authorization: [{
+                        actor: 'eosio',
+                        permission: 'active',
+                    }],
+                    data: {
+                        creator: 'eosio',
+                        name: msg.name,
+                        owner: {
+                            threshold: 1,
+                            keys: [{
+                                key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
+                                weight: 1
+                            }],
+                            accounts: [],
+                            waits: []
+                        },
+                        active: {
+                            threshold: 1,
+                            keys: [{
+                                key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
+                                weight: 1
+                            }],
+                            accounts: [],
+                            waits: []
+                        },
+                    },
+                }]
+            }, {
+                blocksBehind: 3,
+                expireSeconds: 30,
+            })
+        }).then(()=>{
+            console.log('Wallet Information :\n' + walletInfo);
+            res.send("Successfully created account!\n" + walletInfo);
         })
 
-        const result = await api.transact({
-            actions: [{
-                account: 'eosio',
-                name: 'newaccount',
-                authorization: [{
-                    actor: 'eosio',
-                    permission: 'active',
-                }],
-                data: {
-                    creator: 'eosio',
-                    name: msg.name,
-                    owner: {
-                        threshold: 1,
-                        keys: [{
-                            key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
-                            weight: 1
-                        }],
-                        accounts: [],
-                        waits: []
-                    },
-                    active: {
-                        threshold: 1,
-                        keys: [{
-                            key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
-                            weight: 1
-                        }],
-                        accounts: [],
-                        waits: []
-                    },
-                },
-            }]
-        }, {
-            blocksBehind: 3,
-            expireSeconds: 30,
-        });
-        console.log('Wallet Information :\n' + walletInfo);
-        res.send("Successfully created account!\n" + walletInfo);
     } catch (e) {
         console.log(e);
         res.render('404', {
