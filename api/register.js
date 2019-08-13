@@ -30,10 +30,10 @@ router.post('/', async (req, res) => {
         console.log('Register: name = ' + msg.name + ', walletName = ' + msg.walletName);
         let walletInfo = '';
         let options = {
-            method : 'POST',
-            url: 'http://127.0.0.1:6666/v1/wallet/create',
-            headers : { 'content-type' : 'application/json'},
-            body : msg.walletName
+            'method' : 'POST',
+            'url': 'http://127.0.0.1:6666/v1/wallet/create',
+            'headers' : { 'content-type' : 'application/json'},
+            'body' : '"' + msg.walletName + '"',
         };
         new Promise((res, rej) => {
             console.log('want to create wallet.');
@@ -42,30 +42,31 @@ router.post('/', async (req, res) => {
                 //walletKey = body;
                 console.log('wallet recall1:');
                 console.log(body);
+                if(typeof(body) === 'string') {
+                    /* some problems. In body is the wallet pwd. Write it out to file.*/
+                    walletInfo += 'Wallet Name : ' + msg.walletName + '\n';
+                    walletInfo += 'Wallet Password : ' + body + '\n';
+                    res();
+                } else {
+                    console.log(body);
+                    rej('Error: Cannot create wallet');
+                }
             });
-            if(typeof(body) === 'string') {
-                /* some problems. In body is the wallet pwd. Write it out to file.*/
-                walletInfo += 'Wallet Name : ' + msg.walletName + '\n';
-                walletInfo += 'Wallet Password : ' + body + '\n';
-                res();
-            } else {
-                console.log(body);
-                rej('Error: Cannot create wallet');
-            }
+
         }).catch((value) => {
             throw new Error(value);
         }).then(() => {
             return Ecc.randomKey();
         }).then(privateKey => {
             console.log('Private Key :\t', privateKey);
-            console.log('Public Key :\t', ecc.privateToPublic(privateKey));
-            accountInfo.publicKey = ecc.privateToPublic(privateKey);
+            console.log('Public Key :\t', Ecc.privateToPublic(privateKey));
+            accountInfo.publicKey = Ecc.privateToPublic(privateKey);
             accountInfo.privateKey = privateKey;
             walletInfo += 'Account Name : ' + msg.name + '\n';
             walletInfo += 'Account Private Key : ' + privateKey + '\n';
-            walletInfo += 'Account Public Key : ' + ecc.privateToPublic(privateKey) + '\n';
+            walletInfo += 'Account Public Key : ' + Ecc.privateToPublic(privateKey) + '\n';
             options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
-            options.body = [msg.walletName, privateKey];
+            options.body = ['"' + msg.walletName + '"', '"' + privateKey + '"'];
             options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
             request(options, (error, response, body) => {
                 if (error) throw new Error(error);
