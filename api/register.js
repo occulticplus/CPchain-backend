@@ -20,18 +20,23 @@ router.post('/', async (req, res) => {
     try {
         const msg = {
             name: req.body.name,
-            key: req.body.key,
+            //key: req.body.key,
             walletName : req.body.walletName
         };
+        const accountInfo = {
+            publicKey : '',
+            privateKey : ''
+        }
         console.log('Register: name = ' + msg.name + ', Private key = ' + msg.key);
         let walletInfo = '';
         let options = {
             method : 'POST',
-            url: 'http://127.0.0.1:8888/v1/wallet/create',
+            url: 'http://127.0.0.1:6666/v1/wallet/create',
             headers : { 'content-type' : 'application/json'},
             body : msg.walletName
         };
         new Promise((res, rej) => {
+            console.log('want to create wallet.');
             request(options, (error, response, body) => {
                 if (error) throw new Error(error);
                 //walletKey = body;
@@ -52,10 +57,12 @@ router.post('/', async (req, res) => {
         }).then(privateKey => {
             console.log('Private Key :\t', privateKey);
             console.log('Public Key :\t', ecc.privateToPublic(privateKey));
+            accountInfo.publicKey = ecc.privateToPublic(privateKey);
+            accountInfo.privateKey = privateKey;
             walletInfo += 'Account Name : ' + msg.name + '\n';
             walletInfo += 'Account Private Key : ' + privateKey + '\n';
             walletInfo += 'Account Public Key : ' + ecc.privateToPublic(privateKey) + '\n';
-            options.url = 'http://127.0.0.1:8888/v1/wallet/import_key';
+            options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
             options.body = [msg.walletName, privateKey];
             options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
             request(options, (error, response, body) => {
@@ -78,7 +85,7 @@ router.post('/', async (req, res) => {
                     owner: {
                         threshold: 1,
                         keys: [{
-                            key: Numeric.convertLegacyPublicKey(msg.key),
+                            key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
                             weight: 1
                         }],
                         accounts: [],
@@ -87,7 +94,7 @@ router.post('/', async (req, res) => {
                     active: {
                         threshold: 1,
                         keys: [{
-                            key: Numeric.convertLegacyPublicKey(msg.key),
+                            key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
                             weight: 1
                         }],
                         accounts: [],
