@@ -110,22 +110,26 @@ router.post('/', async (req, res) => {
                 expireSeconds: 30,
             })
         }).then(()=>{
+            console.log(accountInfo.privateKey);
+            const sigProvider = new JsSignatureProvider([accountInfo.privateKey]);
             return new Api({ rpc,
-                sigProvider: new JsSignatureProvider([accountInfo.privateKey]),
+                sigProvider,
                 textDecoder: new TextDecoder(),
                 textEncoder: new TextEncoder()
             }).transact({
-                account: 'eosio',
-                name: 'newaccount',
-                authorization: [{
-                    actor: msg.name,
-                    permission: 'active',
+                actions : [{
+                    account: 'admin',
+                    name: 'userregister',
+                    authorization: [{
+                        actor: msg.name,
+                        permission: 'active',
+                    }],
+                    data: {
+                        uname: msg.name,
+                        IDcard: msg.IDcard,
+                        email: msg.email
+                    },
                 }],
-                data: {
-                    uname : msg.name,
-                    IDcard : msg.IDcard,
-                    email : msg.email
-                },
             }, {
                 blocksBehind: 3,
                 expireSeconds: 30,
