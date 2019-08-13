@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
             'headers' : { 'content-type' : 'application/json'},
             'body' : '"' + msg.name + '"',
         };
-        new Promise((res, rej) => {
+        return await new Promise((res, rej) => {
             console.log('want to create wallet.');
             request(options, (error, response, body) => {
                 if (error) throw new Error(error);
@@ -133,18 +133,21 @@ router.post('/', async (req, res) => {
             }, {
                 blocksBehind: 3,
                 expireSeconds: 30,
-            })
-
+            });
         }).catch((value)=>{
             console.log(value);
             throw new Error('promise rejected');
         }).then(()=>{
             console.log('Wallet Information :\n' + walletInfo);
+            res.send("Successfully created account!\n" + walletInfo);
+            /*
             res.render('200', {
                 status : 'success',
                 message : "Successfully created account!\n" + walletInfo
             })
+            */
         })
+        console.log('unexpected end');
 
     } catch (e) {
         console.log(e);
