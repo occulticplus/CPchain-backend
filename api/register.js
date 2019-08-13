@@ -21,19 +21,21 @@ router.post('/', async (req, res) => {
         const msg = {
             name: req.body.name,
             //key: req.body.key,
-            walletName : req.body.walletName
+            IDcard : req.body.IDcard,
+            email : req.body.email,
+            //walletName : req.body.walletName
         };
         const accountInfo = {
             publicKey : '',
             privateKey : ''
         }
-        console.log('Register: name = ' + msg.name + ', walletName = ' + msg.walletName);
+        console.log('Register: name = ' + msg.name + ', walletName = ' + msg.name);
         let walletInfo = '';
         let options = {
             'method' : 'POST',
             'url': 'http://127.0.0.1:6666/v1/wallet/create',
             'headers' : { 'content-type' : 'application/json'},
-            'body' : '"' + msg.walletName + '"',
+            'body' : '"' + msg.name + '"',
         };
         new Promise((res, rej) => {
             console.log('want to create wallet.');
@@ -44,7 +46,7 @@ router.post('/', async (req, res) => {
                 console.log(body);
                 if(typeof(body) === 'string') {
                     /* some problems. In body is the wallet pwd. Write it out to file.*/
-                    walletInfo += 'Wallet Name : ' + msg.walletName + '\n';
+                    walletInfo += 'Wallet Name : ' + msg.name + '\n';
                     walletInfo += 'Wallet Password : ' + body + '\n';
                     res();
                 } else {
@@ -66,7 +68,7 @@ router.post('/', async (req, res) => {
             walletInfo += 'Account Private Key : ' + privateKey + '\n';
             walletInfo += 'Account Public Key : ' + Ecc.privateToPublic(privateKey) + '\n';
             options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
-            options.body = JSON.stringify([msg.walletName, accountInfo.privateKey]);
+            options.body = JSON.stringify([msg.name, accountInfo.privateKey]);
             options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
             request(options, (error, response, body) => {
                 if (error) throw new Error(error);
@@ -108,8 +110,33 @@ router.post('/', async (req, res) => {
                 expireSeconds: 30,
             })
         }).then(()=>{
+            return new Api({ rpc,
+                sigProvider: new JsSignatureProvider([accountInfo.privateKey]),
+                textDecoder: new TextDecoder(),
+                textEncoder: new TextEncoder()
+            }).transact({
+                account: 'eosio',
+                name: 'newaccount',
+                authorization: [{
+                    actor: msg.name,
+                    permission: 'active',
+                }],
+                data: {
+                    uname : msg.name,
+                    IDcard : msg.IDcard,
+                    email : msg.email
+                },
+            }, {
+                blocksBehind: 3,
+                expireSeconds: 30,
+            })
+
+        }).then(()=>{
             console.log('Wallet Information :\n' + walletInfo);
-            res.send("Successfully created account!\n" + walletInfo);
+            res.render('200', {
+                status : 'success',
+                message : "Successfully created account!\n" + walletInfo
+            })
         })
 
     } catch (e) {
