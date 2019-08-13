@@ -9,11 +9,13 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "eosjs": "^20.0.0",
+    "eosjs-ecc": "latest",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.0",
     "pug": "2.0.0-beta11",
+    "request": "^2.88.0",
     "yarn": "^1.17.3"
   }
 }
