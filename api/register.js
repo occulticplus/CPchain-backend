@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
             publicKey : '',
             privateKey : ''
         }
-        console.log('Register: name = ' + msg.name + ', Private key = ' + msg.key);
+        console.log('Register: name = ' + msg.name + ', walletName = ' + msg.walletName);
         let walletInfo = '';
         let options = {
             method : 'POST',
@@ -40,14 +40,16 @@ router.post('/', async (req, res) => {
             request(options, (error, response, body) => {
                 if (error) throw new Error(error);
                 //walletKey = body;
+                console.log('wallet recall1:');
                 console.log(body);
             });
-            if(typeof(body) == 'string') {
+            if(typeof(body) === 'string') {
                 /* some problems. In body is the wallet pwd. Write it out to file.*/
                 walletInfo += 'Wallet Name : ' + msg.walletName + '\n';
                 walletInfo += 'Wallet Password : ' + body + '\n';
                 res();
             } else {
+                console.log(body);
                 rej('Error: Cannot create wallet');
             }
         }).catch((value) => {
