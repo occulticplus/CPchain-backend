@@ -32,24 +32,24 @@ router.post('/', (req, res) => {
             method : 'POST',
             url : 'http://127.0.0.1:5000/api/mark',
             header : 'applications/json',
-            body : {base: JSON.stringify(msg.base)}
+            body : JSON.stringify({base: msg.base})
         }
         let pictureInfo;
         return new Promise((resolve, reject) => {
-            console.log('options:\n' + options);
+            console.log(options);
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
                     throw new Error('Can\'t get marks of the picture!');
                 }
-                console.log(body);
+                console.log(body.hash);
                 console.log('++++++++++++++++++++++++++++++++++++++');
                 pictureInfo = JSON.parse(JSON.stringify(body));
                 resolve(body);
             })
         }).then(() => {
             return new Promise((resolve, reject) => {
-                options.url = 'http://127.0.0.1:6666/v1/wallet/list_key';
+                options.url = 'http://127.0.0.1:6666/v1/wallet/list_keys';
                 options.body = JSON.stringify([msg.name, req.cookies['walletKey']]);
                 request(options, (error, response, body) => {
                     if (error) {
