@@ -58,9 +58,9 @@ router.post('/', (req, res) => {
                     }
                     console.log(body);
                     console.log('*********************************************');
-                    pictureInfo.publicKey = body[0];
-                    pictureInfo.privateKey = body[1];
-                    resolve(pictureInfo);
+                    pictureInfo.publicKey = body[0][0];
+                    pictureInfo.privateKey = body[0][1];
+                    resolve();
                 });
             })
         }).then(() => {
@@ -86,6 +86,7 @@ router.post('/', (req, res) => {
         }).then((value) => {
             console.log(value);
             // todo : check the return value.
+            console.log('//////////////////////////////');
             return rpc.get_table_rows({
                 json: true,
                 code: 'admin',
@@ -96,6 +97,8 @@ router.post('/', (req, res) => {
                 show_payer: true
             })
         }).then((value) => {
+            console.log(value);
+            console.log('````````````````````````````');
             if (value.rows[0].id == null) {
                 throw new Error('Cannot read id of the transaction.');
             }
