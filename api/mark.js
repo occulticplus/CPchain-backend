@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
             method : 'POST',
             url : 'http://127.0.0.1:5000/api/mark',
             header : 'applications/json',
-            body : JSON.stringify(msg.base)
+            body : {base: JSON.stringify(msg.base)}
         }
         let pictureInfo;
         return new Promise((resolve, reject) => {
