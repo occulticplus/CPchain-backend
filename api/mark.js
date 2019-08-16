@@ -58,8 +58,10 @@ router.post('/', (req, res) => {
                     }
                     console.log(body);
                     console.log('*********************************************');
-                    pictureInfo.publicKey = JSON.parse(body)[0][0];
-                    pictureInfo.privateKey = JSON.parse(body)[0][1];
+                    const pk = JSON.parse(body)[0][0];
+                    const sk = JSON.parse(body)[0][1];
+                    pictureInfo.publicKey = pk;
+                    pictureInfo.privateKey = sk;
                     console.log(pictureInfo.publicKey + ' ' + pictureInfo.privateKey);
                     resolve();
                 });
