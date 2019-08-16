@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
         })
     } catch (e) {
         console.log(e);
-        res.render('404', {
+        res.send({
             'status' : 404,
             'message' : 'Cannot login and unlock wallet. Some Problems happened.'
         });

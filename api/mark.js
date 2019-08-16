@@ -89,6 +89,9 @@ router.post('/', (req, res) => {
                         hash: pictureInfo.hash
                     }
                 }]
+            }, {
+                blocksBehind: 3,
+                expireSeconds: 30,
             });
         }).then((value) => {
             console.log(value);
