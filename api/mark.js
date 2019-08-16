@@ -106,10 +106,11 @@ router.post('/', (req, res) => {
         }).then((value) => {
             console.log(value);
             console.log('````````````````````````````');
-            if (value.rows[0].id == null) {
+            if (value.rows[0].data.id == null) {
                 throw new Error('Cannot read id of the transaction.');
             }
             const id = value.rows[0].data.id;
+            console.log('id == ' + id);
             return new Promise((resolve, reject) => {
                 options.url = 'https://127.0.0.1:5000/api/save';
                 options.body = JSON.stringify({
