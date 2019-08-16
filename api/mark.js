@@ -102,7 +102,7 @@ router.post('/', (req, res) => {
             return new Promise((resolve, reject) => {
                 options.url = 'https://127.0.0.1:5000/api/save';
                 options.body = {
-                    id: id,
+                    id: JSON.stringify(id),
                     owner: msg.name,
                     hash: pictureInfo.hash,
                     data: msg.base,
