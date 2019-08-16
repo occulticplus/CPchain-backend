@@ -36,13 +36,13 @@ router.post('/', (req, res) => {
         }
         let pictureInfo;
         return new Promise((resolve, reject) => {
-            console.log(options);
+            //console.log(options);
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
                     throw new Error('Can\'t get marks of the picture!');
                 }
-                console.log(body.hash);
+                console.log(body);
                 console.log('++++++++++++++++++++++++++++++++++++++');
                 pictureInfo = JSON.parse(JSON.stringify(body));
                 resolve(body);
