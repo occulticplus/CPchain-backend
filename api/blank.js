@@ -10,6 +10,8 @@ const { TextEncoder, TextDecoder } = require('util');                   // node 
 const rpc = new JsonRpc('http://127.0.0.1:8000', { fetch });
 const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 const request = require('request');
+const inm = require('../config/blank');
+
 
 router.get('/', (req, res) => {
     // res.send('this is a blank.'
@@ -28,13 +30,39 @@ router.get('/', (req, res) => {
     }
 })
 
-router.post('/foo/', (req, res) => {
+router.post('/foo', (req, res) => {
     console.log('may i acuqire a bespo');
     console.log(req.body);
     //res.send('this is a blank.')
 })
 
-router.get('/num/', (req, res) => {
+router.get('/inm', (req, res) => {
+    let a = 1;
+    a = a + 1;
+    console.log('now a is ' + a);
+    console.log('yjsnpi is' + inm.yjsnpi);
+    inm.yjsnpi += 1;
+    inm.akys = 26;
+    console.log(inm);
+    const cookie = require('../config/blank');
+    console.log(cookie);
+    res.send('ok');
+})
+
+router.get('/cookie', (req, res) => {
+    let a = 1;
+    a = a + 1;
+    console.log('now a is ' + a);
+    console.log('yjsnpi is' + inm.yjsnpi);
+    inm.yjsnpi += 1;
+    inm.akys = 26;
+    console.log(inm);
+    const cookie = require('../config/blank');
+    console.log(cookie);
+    res.send('ok');
+})
+
+router.get('/num', (req, res) => {
     const result = numeric.convertLegacyPublicKey("EOSSB");
     console.log(result);
     res.send(result);

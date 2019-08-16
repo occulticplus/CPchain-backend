@@ -21,13 +21,22 @@ router.post('/', (req, res) => {
     }
     try {
         const options = {
-            action : 'POST',
+            method : 'POST',
             url : 'http://127.0.0.1:8888/v1/wallet/unlock/',
             header : {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-            body : [msg.walletName, msg.walletKey]
+            body : JSON.stringify([msg.walletName, msg.walletKey])
         }
         request(options, (error, response, body) => {
-
+            if (error) throw new Error(error);
+            console.log(body);
+            if (typeof(body) == 'object' && Object.keys(body).length === 0) {
+                res.cookie('walletKey', req.body.walletKey, {signed : true, maxAge : 3600});
+                console.log('ok unlocked the wallet.');
+                res.send('ok unlocked the wallet.');
+            } else {
+                console.log('Failed to unlock the wallet: The walletKey is not correct');
+                res.send('The key of wallet is wrong. Please check your password.');
+            }
         })
     } catch (e) {
         console.log(e);
