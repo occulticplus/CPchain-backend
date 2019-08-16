@@ -44,8 +44,8 @@ router.post('/', (req, res) => {
                 }
                 console.log(JSON.parse(body).hash);
                 console.log('++++++++++++++++++++++++++++++++++++++');
-                pictureInfo = JSON.parse(JSON.stringify(body));
-                resolve(body);
+                pictureInfo = JSON.parse(body);
+                resolve();
             })
         }).then(() => {
             return new Promise((resolve, reject) => {
