@@ -27,6 +27,7 @@ router.post('/', (req, res) => {
             throw new Error('The user has not signed in. Please first signed in to unlock the wallet.');
         }
         // now the req must have 'Walletkey' in its cookies.
+        console.log('The walletKey : ' + req.cookies['walletKey']);
         const options = {
             method : 'POST',
             url : 'http://127.0.0.1:5000/api/mark',
@@ -41,6 +42,7 @@ router.post('/', (req, res) => {
                     throw new Error('Can\'t get marks of the picture!');
                 }
                 console.log(body);
+                console.log('++++++++++++++++++++++++++++++++++++++');
                 pictureInfo = JSON.parse(JSON.stringify(body));
                 resolve(body);
             })
@@ -54,6 +56,7 @@ router.post('/', (req, res) => {
                         throw new Error('Can\'t get the keys.Please checkout if you are signed in.');
                     }
                     console.log(body);
+                    console.log('*********************************************');
                     pictureInfo.publicKey = body[0];
                     pictureInfo.privateKey = body[1];
                     resolve(pictureInfo);
@@ -114,6 +117,7 @@ router.post('/', (req, res) => {
                         throw new Error('Can\'t save to smart servers!');
                     }
                     console.log(body);
+                    console.log('--------------------------------------------');
                     if (body.result == 1) {
                         console.log('Succeeded: successfully checked the picture!');
                         res.send({
