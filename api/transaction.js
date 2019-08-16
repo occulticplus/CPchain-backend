@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
     return new Promise((resolve, reject) => {
         const options = {
             method: 'POST',
-            url: 'http//127.0.0.1:8888/v1/wallet/key_list',
+            url: 'http//127.0.0.1:6666/v1/wallet/key_list',
             header: 'application/json',
         }
     });

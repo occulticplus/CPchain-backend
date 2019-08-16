@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
             if (error) throw new Error(error);
             console.log(body);
             if (typeof(body) == 'object' && Object.keys(body).length === 0) {
-                res.cookie('walletKey', req.body.walletKey, {signed : true, maxAge : 3600});
+                res.cookie('walletKey', req.body.walletKey);
                 console.log('ok unlocked the wallet.');
                 res.send('ok unlocked the wallet.');
             } else {
