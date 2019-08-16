@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
             body : JSON.stringify(req.body.base)
         }
         let pictureInfo;
-        return new Promise((res, rej) => {
+        return new Promise((resolve, reject) => {
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
@@ -42,10 +42,10 @@ router.post('/', (req, res) => {
                 }
                 console.log(body);
                 pictureInfo = JSON.parse(JSON.stringify(body));
-                res(body);
+                resolve(body);
             })
         }).then(() => {
-            return new Promise((res, rej) => {
+            return new Promise((resolve, reject) => {
                 options.url = 'http://127.0.0.1:8888/v1/wallet/list_key';
                 options.body = JSON.stringify([msg.name, req.signedCookies['walletKey']]);
                 request(options, (error, response, body) => {
@@ -56,7 +56,7 @@ router.post('/', (req, res) => {
                     console.log(body);
                     pictureInfo.publicKey = body[0];
                     pictureInfo.privateKey = body[1];
-                    res(pictureInfo);
+                    resolve(pictureInfo);
                 });
             })
         }).then(() => {
@@ -96,7 +96,7 @@ router.post('/', (req, res) => {
                 throw new Error('Cannot read id of the transaction.');
             }
             const id = value.rows[0].id;
-            return new Promise((res, rej) => {
+            return new Promise((resolve, reject) => {
                 options.url = 'https://127.0.0.1:5000/api/save';
                 options.body = {
                     id: id,
