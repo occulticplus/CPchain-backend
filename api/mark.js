@@ -67,6 +67,10 @@ router.post('/', (req, res) => {
                 });
             })
         }).then(() => {
+            console.log({
+                owner: msg.name,
+                hash: pictureInfo.hash
+            });
             return new Api({
                 rpc,
                 signatureProvider : new JsSignatureProvider([pictureInfo.privateKey]),
@@ -75,7 +79,7 @@ router.post('/', (req, res) => {
             }).transact({
                 actions: [{
                     account: 'admin',
-                    name: 'cpregist',
+                    name: 'cpregister',
                     authorization: [{
                         actor: msg.name,
                         permission: 'active'
@@ -105,11 +109,11 @@ router.post('/', (req, res) => {
             if (value.rows[0].id == null) {
                 throw new Error('Cannot read id of the transaction.');
             }
-            const id = value.rows[0].id;
+            const id = value.rows[0].data.id;
             return new Promise((resolve, reject) => {
                 options.url = 'https://127.0.0.1:5000/api/save';
-                options.body = {
-                    id: JSON.stringify(id),
+                options.body = JSON.stringify({
+                    id: id,
                     owner: msg.name,
                     hash: pictureInfo.hash,
                     data: msg.base,
@@ -117,7 +121,7 @@ router.post('/', (req, res) => {
                     r: pictureInfo.r,
                     key: pictureInfo.key,
                     logo: pictureInfo.logo_base64
-                };
+                });
                 request(options, (error, response, body) => {
                     if (error) {
                         console.log(error);
