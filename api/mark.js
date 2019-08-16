@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
                     console.log(error);
                     throw new Error('Can\'t get marks of the picture!');
                 }
-                console.log(body);
+                console.log(JSON.parse(body).hash);
                 console.log('++++++++++++++++++++++++++++++++++++++');
                 pictureInfo = JSON.parse(JSON.stringify(body));
                 resolve(body);
@@ -58,8 +58,9 @@ router.post('/', (req, res) => {
                     }
                     console.log(body);
                     console.log('*********************************************');
-                    pictureInfo.publicKey = body[0][0];
-                    pictureInfo.privateKey = body[0][1];
+                    pictureInfo.publicKey = JSON.parse(body)[0][0];
+                    pictureInfo.privateKey = JSON.parse(body)[0][1];
+                    console.log(pictureInfo.publicKey + ' ' + pictureInfo.privateKey);
                     resolve();
                 });
             })
