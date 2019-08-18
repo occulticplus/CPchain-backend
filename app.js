@@ -25,6 +25,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+app.use('*',function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*'); //这个表示任意域名都可以访问，这样写不能携带cookie了。
+  //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1'); //这样写，只有www.baidu.com 可以访问。
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');//设置方法
+  next();
+});
+
 app.use('/api', (req, res, next) => {
   console.log('get in api');
   next();

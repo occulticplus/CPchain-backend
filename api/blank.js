@@ -62,6 +62,23 @@ router.get('/cookie', (req, res) => {
     res.send('ok');
 })
 
+router.post('/front', (req, res) => {
+    //console.log(req);
+    console.log(req.body);
+    console.log('////')
+    if (req.body.wtf != null) {
+        console.log('-----------');
+        console.log(req.body.wtf);
+    }
+    //res.addHeader( "Access-Control-Allow-Origin", "*" );
+    console.log('************')
+    //res.status(200).send('hello');
+    res.status(200).send({
+        status: 200,
+        message: 'ok'
+    });
+})
+
 router.get('/num', (req, res) => {
     const result = numeric.convertLegacyPublicKey("EOSSB");
     console.log(result);
