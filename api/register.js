@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
         }
         console.log('Register: name = ' + msg.name + ', walletName = ' + msg.name);
         let walletInfo = '';
-        let options = {
+        const options = {
             'method' : 'POST',
             'url': 'http://127.0.0.1:6666/v1/wallet/create',
             'headers' : { 'content-type' : 'application/json'},

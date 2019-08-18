@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/test.css" />
+		<title></title>
+	</head>
+
+	<body>
+
+		<canvas id="canvas" style="position: absolute;z-index: -1;">	 </canvas>
+		<canvas id="canvas_move" style="position: absolute;z-index: 1;"></canvas>
+		<canvas id="canvas_bitcoinmove" style="position: absolute;z-index: 2;"></canvas>
+		<canvas id="canvas_chain" style="position: absolute;z-index: 2;"></canvas>
+		<div class="contain">
+			<div class="principle_map" id="my-canvas">
+
+				<div class="map_detail">
+
+					<div class="left">
+						<!--<input type="button" value="light" onclick="light()"></input>-->
+						<div class="blockl">
+
+							<img id="chargel1" src="img/charge.png" style="left: 200px;top:60px;" />
+							<img id="ameterl1" src="img/ammeter.png" style="left: 354px;width: 40px;top: 100px;" />
+							<img id="terminall1" src="img/terminal.png" style="left: 426px;width: 40px;top: 106px;" />
+						</div>
+						<div class="blockl">
+							<img id="chargel2" src="img/charge.png" style="left: 200px; top: 220px;" />
+							<img id="ameterl2" src="img/ammeter.png" style="left: 354px;width: 40px;top: 260px;" />
+							<img id="terminall2" src="img/terminal.png" style="left: 426px;width: 40px;top: 270px;" />
+						</div>
+						<div class="blockl">
+							<img id="chargel3" src="img/charge.png" style="left: 200px; top: 380px;" />
+							<img id="ameterl3" src="img/ammeter.png" style="left: 354px;width: 40px;top: 420px;" />
+							<img id="terminall3" src="img/terminal.png" style="left: 426px;width: 40px;top: 430px;" />
+						</div>
+					</div>
+					<div class="right">
+						<div class="blockr">
+
+							<img id="ameterr1" src="img/ammeter.png" style="left: 930px;width: 40px;top: 100px;" />
+							<img id="terminalr1" src="img/terminal.png" style="left: 850px;width: 40px;top: 106px;" />
+							<img id="userr1" src="img/user.png" style="left: 1000px;top:60px;" />
+						</div>
+						<div class="blockr">
+							<img id="ameterr2" src="img/ammeter.png" style="left: 930px;width: 40px;top: 260px;" />
+							<img id="terminalr2" src="img/terminal.png" style="left: 850px;width: 40px;top: 270px;" />
+							<img id="userr2" src="img/user.png" style="left: 1000px;top:220px;" />
+						</div>
+						<div class="blockr">
+							<img id="ameterr3" src="img/ammeter.png" style="left: 930px;width: 40px;top: 420px;" />
+							<img id="terminalr3" src="img/terminal.png" style="left: 850px;width: 40px;top: 430px;" />
+							<img id="userr3" src="img/user.png" style="left: 1000px;top:380px;" />
+						</div>
+					</div>
+
+				</div>
+
+				<div class="battery_part">
+					<div class="bottom">
+						<div class="blockb">
+							<img id="ameterb1" src="img/ammeter.png" style="left: 420px;width: 40px;top: 680px;" />
+							<img id="terminalb1" src="img/terminal.png" style="left: 415px;width: 40px;top: 625px;" />
+							<img id="batteryb1" src="img/battery.png" style="left:390px;top:730px;">
+						</div>
+						<div class="blockb">
+							<img id="ameterb1" src="img/ammeter.png" style="left: 550px;width: 40px;top: 680px;" />
+							<img id="terminalb1" src="img/terminal.png" style="left: 545px;width: 40px;top: 625px;" />
+							<img id="batteryb1" src="img/battery.png" style="left:520px;top:730px;">
+						</div>
+						<div class="blockb">
+							<img id="ameterb1" src="img/ammeter.png" style="left: 700px;width: 40px;top: 680px;" />
+							<img id="terminalb1" src="img/terminal.png" style="left: 695px;width: 40px;top: 625px;" />
+							<img id="batteryb1" src="img/battery.png" style="left:670px;top:730px;">
+						</div>
+						<div class="blockb">
+							<img id="ameterb1" src="img/ammeter.png" style="left: 865px;width: 40px;top: 680px;" />
+							<img id="terminalb1" src="img/terminal.png" style="left: 860px;width: 40px;top: 625px;" />
+							<img id="batteryb1" src="img/battery.png" style="left:830px;top:730px;">
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="block_chain">
+				<div class="left-chain"></div>
+				<div class="chain">
+					<canvas id="chain">	 </canvas>
+				</div>
+
+			</div>
+
+		</div>
+	</body>
+	<script>
+		function draweleline(context, x1, y1) {
+			context.moveTo(x1 + 307, y1 + 120);
+			context.lineTo(x1 + 350, y1 + 120);
+			context.moveTo(x1 + 390, y1 + 120);
+			context.lineTo(x1 + 425, y1 + 120);
+			context.moveTo(x1 + 470, y1 + 120);
+			context.lineTo(x1 + 850, y1 + 120);
+			context.moveTo(x1 + 892, y1 + 120);
+			context.lineTo(x1 + 927, y1 + 120);
+			context.moveTo(x1 + 967, y1 + 120);
+			context.lineTo(x1 + 1010, y1 + 120);
+
+			context.moveTo(x1 + 307, y1 + 280);
+			context.lineTo(x1 + 350, y1 + 280);
+			context.moveTo(x1 + 390, y1 + 280);
+			context.lineTo(x1 + 425, y1 + 280);
+			context.moveTo(x1 + 470, y1 + 280);
+			context.lineTo(x1 + 850, y1 + 280);
+			context.moveTo(x1 + 892, y1 + 280);
+			context.lineTo(x1 + 927, y1 + 280);
+			context.moveTo(x1 + 967, y1 + 280);
+			context.lineTo(x1 + 1010, y1 + 280);
+
+			context.moveTo(x1 + 307, y1 + 440);
+			context.lineTo(x1 + 350, y1 + 440);
+			context.moveTo(x1 + 390, y1 + 440);
+			context.lineTo(x1 + 425, y1 + 440);
+			context.moveTo(x1 + 470, y1 + 440);
+			context.lineTo(x1 + 850, y1 + 440);
+			context.moveTo(x1 + 892, y1 + 440);
+			context.lineTo(x1 + 927, y1 + 440);
+			context.moveTo(x1 + 967, y1 + 440);
+			context.lineTo(x1 + 1010, y1 + 440);
+			// 横线
+			context.moveTo(x1 + 433, y1 + 747);
+			context.lineTo(x1 + 433, y1 + 724);
+			context.moveTo(x1 + 433, y1 + 680);
+			context.lineTo(x1 + 433, y1 + 660);
+			context.moveTo(x1 + 433, y1 + 620);
+			context.lineTo(x1 + 433, y1 + 550);
+
+			context.moveTo(x1 + 565, y1 + 747);
+			context.lineTo(x1 + 565, y1 + 724);
+			context.moveTo(x1 + 565, y1 + 680);
+			context.lineTo(x1 + 565, y1 + 660);
+			context.moveTo(x1 + 565, y1 + 620);
+			context.lineTo(x1 + 565, y1 + 550);
+
+			context.moveTo(x1 + 715, y1 + 747);
+			context.lineTo(x1 + 715, y1 + 724);
+			context.moveTo(x1 + 715, y1 + 680);
+			context.lineTo(x1 + 715, y1 + 660);
+			context.moveTo(x1 + 715, y1 + 620);
+			context.lineTo(x1 + 715, y1 + 550);
+
+			context.moveTo(x1 + 880, y1 + 747);
+			context.lineTo(x1 + 880, y1 + 724);
+			context.moveTo(x1 + 880, y1 + 680);
+			context.lineTo(x1 + 880, y1 + 660);
+			context.moveTo(x1 + 880, y1 + 620);
+			context.lineTo(x1 + 880, y1 + 550);
+			//竖线
+			context.moveTo(x1 + 433, y1 + 550);
+			context.lineTo(x1 + 880, y1 + 550);
+			context.moveTo(x1 + 645, y1 + 550);
+			context.lineTo(x1 + 645, y1 + 120);
+			context.stroke();
+		}
+
+		function radom() {
+			var i = Math.floor(Math.random() * 10);
+			console.log(i);
+			return i;
+		}
+		var block = new Image();
+		var ele_min = new Image();
+
+		function init() {
+			block.src = "img/block_min.png";
+			window.requestAnimationFrame(draw);
+		}
+
+		var a = [
+			[400, 120],
+			[800, 120],
+			[400, 280],
+			[800, 280],
+			[400, 440],
+			[800, 440],
+			[380, 540],
+			[510, 540],
+			[660, 540],
+			[830, 540]
+		];
+
+		var temp = radom();
+		var x = 400;
+		var y = 120;
+		var tx, ty;
+
+		var dx = 300;
+		var dy = 900;
+
+		tx = (dx - x) / 300;
+		ty = (dy - y) / 300;
+		var i = 0;
+
+		function draw() {
+
+			if(y < dy) {
+				context3.clearRect(0, 0, 1200, 1000);
+				context3.drawImage(block, x, y);
+
+			} else {
+				context4.drawImage(block, x, y);
+				dx += 60;
+				if(dx > 1100) {
+					context4.clearRect(0, 0, 1200, 1000);
+					dx = 300;
+				}
+				x = a[radom()][0];
+				y = a[radom()][1];
+				tx = (dx - x) / 300;
+				ty = (dy - y) / 300;
+			
+				context3.drawImage(block, x, y);
+			}
+			x = x + tx;
+			y = y + ty;
+		}
+		setInterval(init, 30);
+
+		//电荷移动
+		function ele_init() {
+			ele_min.src = "img/ele_minest.png";
+			window.requestAnimationFrame(draw_e);
+		}
+		var ex = 250;
+		var ey = 100;
+		var midex = 640
+
+		function draw_e() {
+			context.clearRect(0, 0, 1200, 800);
+			if(ex > 1000) ex = 270;
+			if(midex > 1000) midex = 640;
+			if(ex > 600 && ex < 640) {} else {
+				context.drawImage(ele_min, ex, ey);
+				context.drawImage(ele_min, midex, 260);
+				context.drawImage(ele_min, ex, 420);
+			}
+			ex += 2;
+			midex += 2;
+
+		}
+		setInterval(ele_init, 20);
+		//		function createRoundRect(con, x1, y1, width, height, radius) {
+		//			// 移动到左上角
+		//			con.moveTo(x1 + radius, y1);
+		//			// 添加一条连接到右上角的线段
+		//			con.lineTo(x1 + width - radius, y1);
+		//			// 添加一段圆弧
+		//			con.arcTo(x1 + width, y1, x1 + width, y1 + radius, radius);
+		//			// 添加一条连接到右下角的线段
+		//			con.lineTo(x1 + width, y1 + height - radius);
+		//			// 添加一段圆弧
+		//			con.arcTo(x1 + width, y1 + height, x1 + width - radius, y1 + height, radius);
+		//			// 添加一条连接到左下角的线段
+		//			con.lineTo(x1 + radius, y1 + height);
+		//			// 添加一段圆弧
+		//			con.arcTo(x1, y1 + height, x1, y1 + height - radius, radius);
+		//			// 添加一条连接到左上角的线段
+		//			con.lineTo(x1, y1 + radius);
+		//			// 添加一段圆弧
+		//			con.arcTo(x1, y1, x1 + radius, y1, radius);
+		//			con.moveTo(x1 + 17, y1 + 10);
+		//			con.lineTo(x1 + 17, y1 + height - 8);
+		//			con.arc(x1 + 25, y1 + height - 17, 10, Math.PI / 2, Math.PI * 3 / 2, true);
+		//			con.arc(x1 + 25, y1 + height - 34, 6, Math.PI / 2, Math.PI * 3 / 2, true);
+		//			con.closePath();
+		//			con.moveTo(x1, y1 + height - 25);
+		//			con.lineTo(x1 - 30, y1 + height - 25);
+		//		}
+		//		var x = 30;
+		//
+		//		function draw() {
+		//
+		//			createRoundRect(context2, x, 30, 50, 50, 20);
+		//			context2.stroke();
+		//			x += 70;
+		//			if(x > 900) {
+		//				context2.fillStyle = "#FFFFFF";
+		//				context2.beginPath();
+		//				context2.fillRect(0, 0, canvas2.width, canvas2.height);
+		//				context2.closePath();
+		//				x = 30;
+		//			}
+		//		}
+
+		//画布初始化
+		var canvas = document.getElementById("canvas_move");
+		var canvas2 = document.getElementById("canvas");
+		var canvas3 = document.getElementById("canvas_bitcoinmove");
+		var canvas4 = document.getElementById("chain");
+		var context2 = canvas2.getContext("2d");
+		var context = canvas.getContext("2d");
+		var context3 = canvas3.getContext("2d");
+		var context4 = canvas.getContext("2d");
+
+		canvas2.width = 1200;
+		canvas2.height = 1100;
+		canvas.width = 1200;
+		canvas.height = 1100;
+		canvas3.width = 1200;
+		canvas3.height = 1100;
+		canvas4.width = 1200;
+		canvas4.height = 1100;
+		context2.lineWidth = 3;
+
+		context2.strokeStyle = "#000000";
+		draweleline(context2, 0, 0);
+
+		//		var canvas2 = document.getElementById("chain");
+		//		var context2 = canvas2.getContext("2d");
+		//		canvas2.width = 900;
+		//		canvas2.height = 100;
+		//		context2.lineWidth = 3;
+		//		context2.strokeStyle = "#1B6D85";
+		//
+		//		window.setInterval(draw, 500);//时间函数
+		//draw();
+
+		function light() {
+			document.getElementById("ameterl1").src = "img/ammeter_light.png";
+			document.getElementById('chargel1').src = "img/charge_light.png";
+			document.getElementById('terminall1').src = "img/terminal_light.png";
+		}
+
+		function pullout() {
+			document.getElementById("ameterl1").src = "img/ammeter.png";
+			document.getElementById('chargel1').src = "img/charge.png";
+			document.getElementById('terminall1').src = "img/terminal.png";
+		}
+		window.setInterval(light, 2000);
+		window.setInterval(pullout, 3000);
+	</script>
+
+</html>

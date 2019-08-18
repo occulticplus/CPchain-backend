@@ -1,0 +1,106 @@
+.principle_map {
+	width: 100%;
+	height: 800px;
+	float: left;
+}
+
+.block_chain {
+	width: 100%;
+	height: 300px;
+	/*background-color: #E38D13;*/
+	float: left;
+}
+
+.contain {
+	width: 1000px;
+	margin: auto;
+	    box-sizing: border-box;
+}
+
+.map_detail {
+	width: 100%;
+	height: 75%;
+	margin: auto;
+	/*background-color: #1B6D85;*/
+}
+
+.battery_part {
+	/*background-color: #FFFFFF;*/
+	width: 70%;
+	height: 25%;
+	margin: auto;
+}
+
+.left {
+	/*background-color: #D0E9C6;*/
+	width: 50%;
+	float: left;
+	height: 100%;
+}
+
+.right {
+	/*background-color: #D43F3A;*/
+	width: 50%;
+	float: left;
+	height: 100%;
+}
+
+.bottom {
+	/*background-color: #245269;*/
+	height: 100%;
+	width: 100%;
+}
+
+.blockl {
+	/*background-color: #FFFFFF;*/
+	width: 100%;
+	height: 100px;
+	float: left;
+	margin-top: 60px;
+}
+
+.blockr {
+	/*background-color: #FFFFFF;*/
+	width: 100%;
+	height: 100px;
+	float: left;
+	margin-top: 60px;
+}
+.blockl p{
+	color:#31B0D5;
+}
+.blockr p{
+	color:#B92C28;
+}
+.blockl img {
+	width: 100px;
+	position: absolute;
+	/*display: block;*/
+}
+
+.blockb {
+	/*background-color: #FFFFFF;*/
+	width: 25%;
+	height: 100%;
+	float: left;
+}
+
+.blockr img {
+	width: 100px;
+	position: absolute;
+	/*display: block;*/
+}
+
+.blockb img {
+	width: 100px;
+	position: absolute;
+	/*display: block;*/
+}
+
+.chain {
+	width: 90%;
+	height: 100px;
+	margin: auto;
+	margin-top: 50px;
+	/*background-color: #ffffff;*/
+}
