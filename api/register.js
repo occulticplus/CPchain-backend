@@ -19,10 +19,10 @@ const Ecc = require('eosjs-ecc');
 router.post('/', async (req, res) => {
     try {
         const msg = {
-            name: JSON.parse(req.body).name,
+            name: req.body.name,
             //key: req.body.key,
-            IDcard : JSON.parse(req.body).IDcard,
-            email : JSON.parse(req.body).email,
+            IDcard : req.body.IDcard,
+            email : req.body.email,
             //walletName : req.body.walletName
         };
         const accountInfo = {
@@ -72,7 +72,7 @@ router.post('/', async (req, res) => {
             walletInfo += 'Account Private Key : ' + privateKey + '\n';
             walletRet.privateKey = privateKey;
             walletInfo += 'Account Public Key : ' + Ecc.privateToPublic(privateKey) + '\n';
-            walletRet.publicKey = publicKey;
+            walletRet.publicKey = Ecc.privateToPublic(privateKey);
             options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
             options.body = JSON.stringify([msg.name, accountInfo.privateKey]);
             options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}

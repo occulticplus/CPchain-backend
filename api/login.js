@@ -22,7 +22,7 @@ router.post('/', (req, res) => {
     try {
         const options = {
             method : 'POST',
-            url : 'http://127.0.0.1:8888/v1/wallet/unlock/',
+            url : 'http://127.0.0.1:6666/v1/wallet/unlock',
             header : {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             body : JSON.stringify([msg.walletName, msg.walletKey])
         }
