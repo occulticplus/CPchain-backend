@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
             if (error) throw new Error(error);
             console.log(body);
             const ret = JSON.parse(body)
-            if (body === {} || body.code == '500') {
+            if (ret === {} || ret.error.what === 'Already unlocked') {
                 res.cookie('walletKey', req.body.walletKey);
                 res.cookie('userName', req.body.name);
                 console.log('ok unlocked the wallet.');
