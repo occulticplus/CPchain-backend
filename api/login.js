@@ -29,7 +29,8 @@ router.post('/', (req, res) => {
         request(options, (error, response, body) => {
             if (error) throw new Error(error);
             console.log(body);
-            if (typeof(body) == 'object' && Object.keys(body).length === 0) {
+            const ret = JSON.parse(body)
+            if (body === {} || body.code == '500') {
                 res.cookie('walletKey', req.body.walletKey);
                 res.cookie('userName', req.body.name);
                 console.log('ok unlocked the wallet.');
