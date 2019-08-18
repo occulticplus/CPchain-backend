@@ -97,6 +97,13 @@ router.post('/', (req, res) => {
                     if (typeof(ret) === 'undefined') {
 
                     }
+                    res.send({
+                        status: 200,
+                        message: 'successfully recovered the image!',
+                        data: JSON.stringify({
+                            base64: ret
+                        })
+                    })
                 })
             } else {
                 // todo: check the value, and excecute operations when the copyright has conflicts.

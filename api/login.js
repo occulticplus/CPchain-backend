@@ -33,16 +33,22 @@ router.post('/', (req, res) => {
                 res.cookie('walletKey', req.body.walletKey);
                 res.cookie('userName', req.body.name);
                 console.log('ok unlocked the wallet.');
-                res.send('ok unlocked the wallet.');
+                res.send({
+                    status: 200,
+                    msg: 'ok unlocked the wallet.',
+                });
             } else {
                 console.log('Failed to unlock the wallet: The walletKey is not correct');
-                res.send('The key of wallet is wrong. Please check your password.');
+                res.send({
+                    status: 500,
+                    msg: 'The key of wallet is wrong. Please check your password.'
+                });
             }
         })
     } catch (e) {
         console.log(e);
         res.send({
-            'status' : 404,
+            'status' : 500,
             'message' : 'Cannot login and unlock wallet. Some Problems happened.'
         });
     }

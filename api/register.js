@@ -31,6 +31,7 @@ router.post('/', async (req, res) => {
         }
         console.log('Register: name = ' + msg.name + ', walletName = ' + msg.name);
         let walletInfo = '';
+        const walletRet = {};
         const options = {
             'method' : 'POST',
             'url': 'http://127.0.0.1:6666/v1/wallet/create',
@@ -47,7 +48,9 @@ router.post('/', async (req, res) => {
                 if(typeof(body) === 'string') {
                     /* some problems. In body is the wallet pwd. Write it out to file.*/
                     walletInfo += 'Wallet Name : ' + msg.name + '\n';
+                    walletRet.walletName = msg.name;
                     walletInfo += 'Wallet Password : ' + body + '\n';
+                    walletRet.walletPassword = body;
                     res();
                 } else {
                     console.log(body);
@@ -65,8 +68,11 @@ router.post('/', async (req, res) => {
             accountInfo.publicKey = Ecc.privateToPublic(privateKey);
             accountInfo.privateKey = privateKey;
             walletInfo += 'Account Name : ' + msg.name + '\n';
+            walletRet.accountName = msg.name;
             walletInfo += 'Account Private Key : ' + privateKey + '\n';
+            walletRet.privateKey = privateKey;
             walletInfo += 'Account Public Key : ' + Ecc.privateToPublic(privateKey) + '\n';
+            walletRet.publicKey = publicKey;
             options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
             options.body = JSON.stringify([msg.name, accountInfo.privateKey]);
             options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
@@ -139,7 +145,11 @@ router.post('/', async (req, res) => {
             throw new Error('promise rejected');
         }).then(()=>{
             console.log('Wallet Information :\n' + walletInfo);
-            res.send("Successfully created account!\n" + walletInfo);
+            res.send({
+                status: 200,
+                msg: "Successfully created account!",
+                data: JSON.stringify(walletRet)
+            });
             /*
             res.render('200', {
                 status : 'success',
@@ -151,9 +161,9 @@ router.post('/', async (req, res) => {
 
     } catch (e) {
         console.log(e);
-        res.render('404', {
-            status : 114514,
-            message : "Something went wrong"
+        res.send({
+            status : 500,
+            message : "Something went wrong."
         });
     }
 })

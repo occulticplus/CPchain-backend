@@ -93,6 +93,9 @@ router.post('/', (req, res) => {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
+        }).catch(error => {
+            console.log(error);
+            throw new Error('The copyright already exists! Cannot apply for new copyrights.')
         }).then((value) => {
             console.log(value);
             // todo : check the return value.
@@ -139,6 +142,10 @@ router.post('/', (req, res) => {
                         res.send({
                             status: '200',
                             message: 'The copyright of the picture has signed!'
+                            data: JSON.stringify({
+                                id: id
+                            })
+
                         })
                     } else if (JSON.parse(body).result == 0) {
                         console.log('Failed: the copyright has conflicted.');
@@ -155,14 +162,17 @@ router.post('/', (req, res) => {
         }).catch(error => {
             console.log('REJECTED: ' + error);
             res.send({
-                status: '500',
+                status: 500,
                 message: 'Can\'t deal operations.'
             });
         })
 
     } catch (e) {
         console.log(e);
-        res.send('Something wrong happened. We can\'t mark the picture.');
+        res.send({
+            status: 500,
+            msg: 'Something went wrong. We can\'t mark the picture.'
+        });
     }
 });
 
