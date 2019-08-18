@@ -141,7 +141,7 @@ router.post('/', (req, res) => {
                         console.log('Succeeded: successfully checked the picture!');
                         res.send({
                             status: '200',
-                            message: 'The copyright of the picture has signed!'
+                            message: 'The copyright of the picture has signed!',
                             data: JSON.stringify({
                                 id: id
                             })
