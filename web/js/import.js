@@ -27,6 +27,6 @@ function readFile(){
         alert(this.result);
         var base64Str = this.result;
         result.innerHTML = '<img src="'+base64Str+'" alt=""/>'
-        // document.getElementById("base64").value = base64Str;
+        document.getElementById("base64").value = base64Str;
     }
 }

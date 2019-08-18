@@ -3,10 +3,10 @@ $("#login").click(function(){
     var txt = walletName.value.trim();
     var privateKey=document.getElementById("privatekey");
     var key=privateKey.value.trim();
-    var jsonData=JSON.stringify({
-        walletname: walletName,
-        walletkey: privateKey
-    });
+    var jsonData={
+        walletName: txt,
+        walletKey: key
+    };
     if(txt.length==0){
         alert("请输入信息！");
     }
@@ -14,11 +14,14 @@ $("#login").click(function(){
         $.ajax({
             url:"http://127.0.0.1:3000/api/login",
             type:'POST',
-            data:jsontxt,
+            data:jsonData,
             dataType: "json",
             success:function(data){
-               
-                window.location.href='index.html';
+                if(data.status == 200){
+                    alert("登录成功");
+                    window.location.href='index.html';
+                }
+                
 
             },
             error:function(XMLHttpRequest, textStatus, errorThrown) {

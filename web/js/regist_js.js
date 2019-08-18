@@ -8,21 +8,22 @@ $('#register').click(function () {
     }else if (!reg.test(uemail.value)){
         alert("请输入正确的邮箱！");
     }else {
-        var jsonData=JSON.stringify({
-            name: uname,
-            IDcard: uIDcard,
-            email: uemail
-        });
+        var jsonData={
+            name: uname.value,
+            IDcard: uIDcard.value,
+            email: uemail.value
+        };
         $.ajax({
             url:"http://127.0.0.1:3000/api/register",
             type:"POST",
             data:jsonData,
             dataType:"json",
             success:function (data) {
-                res = JSON.parse(data);
-                document.getElementById("password").innerHTML=data.password;
-                document.getElementById("privatekey").innerHTML=data.privatekey;
-                document.getElementById("publickey").innerHTML=data.publickey;
+                // alert(data.data);
+                res = JSON.parse(data.data);
+                document.getElementById("password").innerHTML=res.walletPassword;
+                document.getElementById("privatekey").innerHTML=res.privateKey;
+                document.getElementById("publickey").innerHTML=res.publicKey;
                 $('#info_save').css({"display":"block"});
             },
             error:function(XMLHttpRequest, textStatus, errorThrown) {
