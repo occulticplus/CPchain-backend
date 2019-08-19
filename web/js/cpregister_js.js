@@ -10,8 +10,11 @@ $('#register').click(function () {
     }
   else {
         $.ajax({
-            url:"http://127.0.0.1:8888/api/cpregister",
-            type:"GET",
+            url:"http://127.0.0.1:3000/api/cpregister",
+            type:"POST",
+            data:{
+
+            }
             dataType:"json",
             success:function (data) {
                 if(data!=null){
