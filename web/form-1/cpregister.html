@@ -46,7 +46,7 @@
                     <div class="col-sm-6 col-sm-offset-3 form-box">
                         <div class="form-top">
                             <div class="form-top-left">
-                                <h3>请输入您的用户名及图像</h3>
+                                <h3>请选择图像进行认证</h3>
                             </div>
                             <div class="form-top-right">
                                 <i class="fa fa-key"></i>
@@ -55,7 +55,7 @@
                         <div class="form-bottom">
                             <div class="login-form">
                                 <div class="form-group">
-                                    <input type="text" id="username" placeholder="用户名" required class="form-username form-control">
+                                    <!-- <input type="text" id="username" placeholder="用户名" required class="form-username form-control"> -->
                                     <input type="text" id="base64" placeholder="base" hidden=true>
                                 </div>
                                 <div class="form-group">
@@ -82,14 +82,15 @@
     </div>
     <div id="myModal_fail" class="reveal-modal">
         <h1>版权登记失败</h1>
-        <p>图片认证失败或输入信息有误</p>
+        <p id="error">图片认证失败或输入信息有误</p>
         <a class="close-reveal-modal">&#215;</a>
 
     </div>
     <div id="myModal_suce" class="reveal-modal">
 
         <h1>版权登记成功</h1>
-        <p>请注意保存您的版权编号</p>
+        <span id="pid" style="color: red;font-size:19px">ID</span>
+        <p style="font-size:19px">请注意保存您的版权编号</p>
         <a class="close-reveal-modal">&#215;</a>
 
     </div>

@@ -24,7 +24,7 @@ function readFile(){
 
     reader.onload = function(e){
         //alert(3333)
-        alert(this.result);
+        // alert(this.result);
         var base64Str = this.result;
         result.innerHTML = '<img src="'+base64Str+'" alt=""/>'
         document.getElementById("base64").value = base64Str;
