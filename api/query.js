@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
                 throw new Error('Cannot connect to smart server!');
             }
             const result = JSON.parse(body);
-            console.log(msg.name + '\'s transaction record: ')
+            console.log(Config.userName + '\'s transaction record: ')
             result.forEach((r, i) => {
                 console.log("the " + i + "th record:");
                 console.log({
