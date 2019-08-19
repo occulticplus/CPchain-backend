@@ -17,7 +17,7 @@ const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), te
 router.post('/', (req, res) => {
     try {
         const msg = {
-            name : req.body.name,
+            //name : req.body.name,
             base : req.body.base
         }
         if (typeof(msg.base) != 'string') {
@@ -27,7 +27,9 @@ router.post('/', (req, res) => {
             throw new Error('The user has not signed in. Please first signed in to unlock the wallet.');
         }
         // now the req must have 'Walletkey' in its cookies.
+        console.log('The user : ' + Config.userName);
         console.log('The walletKey : ' + Config.walletKey);
+        msg.name = Config.userName;
         const options = {
             method : 'POST',
             url : 'http://127.0.0.1:5000/api/mark',
