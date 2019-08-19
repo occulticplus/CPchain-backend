@@ -23,19 +23,18 @@ $('#check').click(function () {
               if (data.status === 200) {
                 //恢复成功
                   ret = JSON.parse(data.data);
-                  ret.base64;
-                  alert("注册成功!您的图片的id号为: " + JSON.parse(data.data).id + ",请妥善保存!")
+                  $('#res').html("该图片疑似侵权，已为您恢复原图");
+                  $("#img").attr('src',ret.base64);
+                  show(1);
               } else if (data.status === 304) {
-                //没有篡改
-                  alert("错误: " + data.message)
+                  //没有篡改
+                  $('#res').html("该图片没有侵权");
+                  show(1);
               }else if (data.status === 403){
                   alert("请登录！");
               } else {
-                //恢复失败
-                  alert("Something went wrong");
-                  console.log("Unexpected Error: ");
-                  console.log(data);
-                  console.log(typeof(data) + ' ' + data.status);
+                  //恢复失败
+                  show(0);
               }
             },
             error: value => {

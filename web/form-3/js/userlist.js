@@ -1,7 +1,7 @@
 $("#main").ready(function () {
     $.ajax({
-        url:"http://127.0.0.1:3000/api/list",
-        type:"GET",
+        url:"http://127.0.0.1:3000/api/query",
+        type:"POST",
         dataType:"json",
         success:function (data) {
         	res = JSON.parse(data.data);
