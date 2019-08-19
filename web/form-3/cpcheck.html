@@ -34,7 +34,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2 text">
-                        <h1><strong>版权检测</strong></h1>
+                        <h1><strong>侵权检测</strong></h1>
                         <div class="description">
                             <p>
 
@@ -61,6 +61,7 @@
                                     <p>
                                         <label>请选择一个图像文件(请使用高级浏览器浏览：如Chrome，Firefox)：</label><br>
                                         <input type="file" id="file_input" style="display:none" οnchange=" readFile();" />
+                                        <input type="text" id="base64" placeholder="base" hidden=true>
                                         <button class="btn" id="input">图像读取</button>
                                     </p>
                                     <div id="result">
@@ -91,6 +92,8 @@
     <div id="myModal_suce" class="reveal-modal">
 
         <h1>检测成功</h1>
+        <h1 id="res"></h1>
+        <img src="">
         <p></p>
         <a class="close-reveal-modal">&#215;</a>
 
@@ -99,7 +102,7 @@
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/jquery.backstretch.min.js"></script>
     <script src="assets/js/scripts.js"></script>
-    <script src="../js/charge_ele.js"></script>
+    <script src="../js/cpcheck_js.js"></script>
     <script src="../js/import.js"></script>
 </body>
 
