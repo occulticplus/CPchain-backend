@@ -16,15 +16,22 @@ const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), te
 
 router.post('/', (req, res) => {
     const msg = {
-        id: req.id,
-        name: req.name
     }
     try {
+
+        if (Config.userName === 'null') {
+            console.log('no cookies for username!');
+            res.send({
+                status: 304,
+                message: 'User has not signed in.'
+            })
+        }
+
         const options = {
             method: 'POST',
             url: 'http://127.0.0.1:5000/api/query',
             header: {'Content-type': 'applications/json'},
-            body: JSON.stringify({name: msg.name})
+            body: JSON.stringify({name: Config.userName})
         }
 
         request(options, (error, response, body) => {
