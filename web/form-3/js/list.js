@@ -8,7 +8,8 @@ $("#main").ready(function () {
         	for (let i of res) {
         		htmlStr = '<div class="col-sm-3 layout-box">';
         		htmlStr += '<a>';
-        		htmlStr +=  '<img src="' + i.data + '" alt="">';
+                base = decodeURIComponent(i.data);
+        		htmlStr +=  '<img src="' + base + '" alt="">';
         		htmlStr += '</a>';
         		htmlStr += '<p>'+ i.owner +'<br>'+ "ID：" + i.id +'</p>';
         		$("#main").after(htmlStr);

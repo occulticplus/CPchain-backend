@@ -16,15 +16,16 @@ const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), te
 
 router.post('/', (req, res) => {
     const msg = {
-        id: req.id,
-        base: req.base
+        id: req.body.id,
+        base: req.body.base
     }
     try {
+        msg.base = encodeURIComponent(msg.base);
         const options = {
             method: 'POST',
             url: 'http://127.0.0.1:5000/api/hash',
             header: {'Content-type' : 'application/json'},
-            body: JSON.stringify(msg.base)
+            body: JSON.stringify({base: msg.base})
         }
         const picInfo = {}
         const accountInfo = {}
@@ -77,20 +78,24 @@ router.post('/', (req, res) => {
                         hash: picInfo.hash
                     }
                 }]
-            })
+            }, {
+                blocksBehind: 3,
+                expireSeconds: 30,
+            });
         }).catch((value) => {
             console.log(value);
+            console.log(value.json.error.details);
             console.log('------------------------------');
-            if (value.result === 'success') {
+            if (value.json.error.details[0].message === "assertion failure with message: copyright exist. ") {
                 options.method = 'POST';
                 options.url = 'http://127.0.0.1:5000/api/recovery';
-                options.body = {
+                options.body = JSON.stringify({
                     id: msg.id,
                     base: msg.base
-                }
+                })
                 request(options, (error, response, body) => {
                     if (error) {
-                        consoel.log(error);
+                        console.log(error);
                         throw new Error('Cannot operate recovery. Something went wrong.');
                     }
                     const ret = JSON.parse(body).base64;
@@ -107,14 +112,16 @@ router.post('/', (req, res) => {
                 })
             } else {
                 // todo: check the value, and excecute operations when the copyright has conflicts.
-                consol.log(JSON.parse(value));
+                console.log(value);
                 throw new Error('can\'t understand the chain\'s return value.');
             }
+            return 
         }).then(() => {
             res.send({
                 status: 304,
                 message: 'the picture is not violating the copyright.'
             }).end();
+            return
         })
     } catch(e) {
         console.log(e);

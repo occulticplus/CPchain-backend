@@ -1,6 +1,5 @@
 
 $('#check').click(function () {
-    show(1);
     var reg_num =/^\d+(\.\d{1,2})?$/;
     var id=document.getElementById("id").value.trim();
     var base64=document.getElementById("base64").value.trim();

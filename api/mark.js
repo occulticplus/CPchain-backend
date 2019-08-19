@@ -30,6 +30,10 @@ router.post('/', (req, res) => {
         console.log('The user : ' + Config.userName);
         console.log('The walletKey : ' + Config.walletKey);
         msg.name = Config.userName;
+        // msg.base = msg.base.replace(/\+/g,"%2B"); 
+        // msg.base = msg.base.replace(/\=/g,"%3D"); 
+        msg.base = encodeURIComponent(msg.base);
+        // console.log(msg.base);
         const options = {
             method : 'POST',
             url : 'http://127.0.0.1:5000/api/mark',
@@ -52,7 +56,7 @@ router.post('/', (req, res) => {
         }).then(() => {
             return new Promise((resolve, reject) => {
                 options.url = 'http://127.0.0.1:6666/v1/wallet/list_keys';
-                options.body = JSON.stringify([msg.name, Config.walletKey]);
+                options.body = JSON.stringify([Config.userName, Config.walletKey]);
                 request(options, (error, response, body) => {
                     if (error) {
                         console.log(error);
@@ -147,18 +151,18 @@ router.post('/', (req, res) => {
                             data: JSON.stringify({
                                 id: id
                             })
-
-                        })
+                        }).end();
                     } else if (JSON.parse(body).result == 0) {
                         console.log('Failed: the copyright has conflicted.');
                         res.send({
                             status: 500,
                             message: 'the copyright has conflicted with other images.'
-                        })
+                        }).end();
+                    } else {
+                        console.log('unexpected end.');
+                        console.log('typeof result: ' + typeof(body) + '\nbody:' + body);
+                        throw new Error('Unhandled result type!');
                     }
-                    console.log('unexpected end.');
-                    console.log('typeof result: ' + typeof(body) + '\nbody:' + body);
-                    throw new Error('Unhandled result type!');
                 })
             })
         }).catch(error => {
