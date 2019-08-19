@@ -88,7 +88,8 @@ router.get('/num', (req, res) => {
 router.post('/save', (req, res) => {
     console.log(req);
     const result = req.body.foo;
-    res.cookie('wtf', result);
+    //res.cookie('wtf', result);
+    inm.wtf = result;
     res.send({
         status: 200,
         message: 'saved'
@@ -96,18 +97,18 @@ router.post('/save', (req, res) => {
 })
 
 router.get('/load', (req, res) => {
-    if (req.cookies['wtf'] === null || typeof(req.cookies['wtf']) === 'undefined') {
-        console.log('No cookkies!');
+    if (inm.wtf === null || typeof(inm.wtf) === 'undefined') {
+        console.log('No cookies!');
         res.send({
             status: 500,
             message: 'no'
         }).end();
 
     } else {
-        console.log('my cookie:' + req.cookies['wtf']);
+        console.log('my cookie:' + inm.wtf);
         res.send({
             status: 200,
-            message: JSON.stringify(req.cookies['wtf'])
+            message: inm.wtf
         });
     }
 

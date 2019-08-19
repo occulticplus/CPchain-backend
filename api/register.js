@@ -144,6 +144,8 @@ router.post('/', async (req, res) => {
             console.log(value);
             throw new Error('promise rejected');
         }).then(()=>{
+            Config.userName = walletRet.accountName;
+            Config.walletKey = walletRet.walletPassword;
             console.log('Wallet Information :\n' + walletInfo);
             res.send({
                 status: 200,

@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
         }
         const picInfo = {}
         const accountInfo = {}
-        if (req.cookies['walletKey'] === null || req.cookies['userName'] === null) {
+        if (Config.userName === null || Config.walletKey === null) {
             console.log('User has not login. Refused to serve.');
             res.send({
                 status: 403,
@@ -47,7 +47,7 @@ router.post('/', (req, res) => {
             })
         }).then(() => {
             options.url = 'http://127.0.0.1:6666/v1/wallet/list_keys';
-            options.body = JSON.stringify([req.cookies['userName'], req.cookies['walletKey']]);
+            options.body = JSON.stringify([Config.userName, Config.walletKey]);
             return new Promise((resolve, reject) => {
                 request(options, (error, response, body) => {
                     if (error) {
@@ -70,7 +70,7 @@ router.post('/', (req, res) => {
                     account: 'admin',
                     name: 'cpcheck',
                     authorization: [{
-                        actor: req.cookies['userName'],
+                        actor: Config.userName,
                         permission: 'active'
                     }],
                     data: {
@@ -78,7 +78,7 @@ router.post('/', (req, res) => {
                     }
                 }]
             })
-        }).then((value) => {
+        }).catch((value) => {
             console.log(value);
             console.log('------------------------------');
             if (value.result === 'success') {
@@ -103,13 +103,18 @@ router.post('/', (req, res) => {
                         data: JSON.stringify({
                             base64: ret
                         })
-                    })
+                    }).end();
                 })
             } else {
                 // todo: check the value, and excecute operations when the copyright has conflicts.
                 consol.log(JSON.parse(value));
                 throw new Error('can\'t understand the chain\'s return value.');
             }
+        }).then(() => {
+            res.send({
+                status: 304,
+                message: 'the picture is not violating the copyright.'
+            }).end();
         })
     } catch(e) {
         console.log(e);

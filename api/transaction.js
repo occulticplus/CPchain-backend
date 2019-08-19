@@ -24,11 +24,12 @@ router.post('/', (req, res) => {
     }
     let tranInfo = {};
 
-    if (req.cookies['walletKey'] === null || req.cookies['userName']) {
+    if (Config.userName === null || Config.walletKey === null) {
         throw new Error('The user has not signed in. Please first signed in to unlock the wallet.');
     }
-    options.body = JSON.stringify([msg.sourceUser, req.cookies['walletKey']]);
-    msg.sourceUser = req.cookies['userName'];
+    msg.sourceUser = Config.userName
+    options.body = JSON.stringify([msg.sourceUser, Config.walletKey]);
+
 
     try {
         return new Promise((resolve, reject) => {

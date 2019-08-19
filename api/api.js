@@ -7,6 +7,7 @@ const mark = require('./mark')
 const recovery = require('./recovery')
 const save = require('./recovery')
 const transaction = require('./transaction')
+const query = require('./query')
 
 router.use('/blank', (req, res, next) => {
     console.log('get in blank')
@@ -20,6 +21,7 @@ router.use('/mark', mark)
 router.use('/recovery', recovery)
 router.use('/save', save)
 router.use('/transaction', transaction)
+router.use('/query', query)
 
 /*
 router((req, res) => {

@@ -31,8 +31,12 @@ router.post('/', (req, res) => {
             console.log(body);
             const ret = JSON.parse(body)
             if (ret === {} || ret.error.what === 'Already unlocked') {
+                Config.userName = req.body.name;
+                Config.walletKey = req.body.walletKey;
+                /*
                 res.cookie('walletKey', req.body.walletKey);
                 res.cookie('userName', req.body.name);
+                */
                 console.log('ok unlocked the wallet.');
                 res.send({
                     status: 200,

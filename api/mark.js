@@ -23,11 +23,11 @@ router.post('/', (req, res) => {
         if (typeof(msg.base) != 'string') {
             throw new Error('The picuture is not based in base64. Please check the input.');
         }
-        if (!req.cookies['walletKey']) { // this should be edited. we should check if the the user is loggedIn.
+        if (Config.walletKey === null || Config.userName === null) { // this should be edited. we should check if the the user is loggedIn.
             throw new Error('The user has not signed in. Please first signed in to unlock the wallet.');
         }
         // now the req must have 'Walletkey' in its cookies.
-        console.log('The walletKey : ' + req.cookies['walletKey']);
+        console.log('The walletKey : ' + Config.walletKey);
         const options = {
             method : 'POST',
             url : 'http://127.0.0.1:5000/api/mark',
@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
         }).then(() => {
             return new Promise((resolve, reject) => {
                 options.url = 'http://127.0.0.1:6666/v1/wallet/list_keys';
-                options.body = JSON.stringify([msg.name, req.cookies['walletKey']]);
+                options.body = JSON.stringify([msg.name, Config.walletKey]);
                 request(options, (error, response, body) => {
                     if (error) {
                         console.log(error);
