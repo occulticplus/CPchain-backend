@@ -30,6 +30,7 @@ app.use('*',function (req, res, next) {
   //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1'); //这样写，只有www.baidu.com 可以访问。
   res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');//设置方法
+  res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
 

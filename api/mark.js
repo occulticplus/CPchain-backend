@@ -140,7 +140,7 @@ router.post('/', (req, res) => {
                     if (JSON.parse(body).result == 1) {
                         console.log('Succeeded: successfully checked the picture!');
                         res.send({
-                            status: '200',
+                            status: 200,
                             message: 'The copyright of the picture has signed!',
                             data: JSON.stringify({
                                 id: id
@@ -150,7 +150,7 @@ router.post('/', (req, res) => {
                     } else if (JSON.parse(body).result == 0) {
                         console.log('Failed: the copyright has conflicted.');
                         res.send({
-                            status: '114514',
+                            status: 500,
                             message: 'the copyright has conflicted with other images.'
                         })
                     }

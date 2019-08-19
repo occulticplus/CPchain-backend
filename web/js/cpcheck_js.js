@@ -1,5 +1,5 @@
 
-$('#register').click(function () {
+$('#check').click(function () {
     var reg_num =/^\d+(\.\d{1,2})?$/;
     var name=document.getElementById("username").value.trim();
     var base64=document.getElementById("base64").value.trim();

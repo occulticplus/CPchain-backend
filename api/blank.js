@@ -85,4 +85,32 @@ router.get('/num', (req, res) => {
     res.send(result);
 })
 
+router.post('/save', (req, res) => {
+    console.log(req);
+    const result = req.body.foo;
+    res.cookie('wtf', result);
+    res.send({
+        status: 200,
+        message: 'saved'
+    });
+})
+
+router.get('/load', (req, res) => {
+    if (req.cookies['wtf'] === null || typeof(req.cookies['wtf']) === 'undefined') {
+        console.log('No cookkies!');
+        res.send({
+            status: 500,
+            message: 'no'
+        }).end();
+
+    } else {
+        console.log('my cookie:' + req.cookies['wtf']);
+        res.send({
+            status: 200,
+            message: JSON.stringify(req.cookies['wtf'])
+        });
+    }
+
+})
+
 module.exports = router
