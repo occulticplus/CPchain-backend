@@ -48,6 +48,9 @@ router.post('/', (req, res) => {
                     console.log(error);
                     throw new Error('Can\'t get marks of the picture!');
                 }
+                if (typeof(body) === 'string' && body[0] === '<'){
+                    throw new Error('smart server error!');
+                }
                 console.log(JSON.parse(body).hash);
                 console.log('++++++++++++++++++++++++++++++++++++++');
                 pictureInfo = JSON.parse(body);
@@ -64,6 +67,9 @@ router.post('/', (req, res) => {
                     }
                     console.log(body);
                     console.log('*********************************************');
+                    if (typeof(body) === 'string' && body[0] === '<'){
+                        throw new Error('smart server error!');
+                    }
                     const pk = JSON.parse(body)[0][0];
                     const sk = JSON.parse(body)[0][1];
                     pictureInfo.publicKey = pk;
@@ -143,6 +149,9 @@ router.post('/', (req, res) => {
                     }
                     console.log(body);
                     console.log('--------------------------------------------');
+                    if (typeof(body) === 'string' && body[0] === '<'){
+                        throw new Error('smart server error!');
+                    }
                     if (JSON.parse(body).result == 1) {
                         console.log('Succeeded: successfully checked the picture!');
                         res.send({

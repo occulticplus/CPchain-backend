@@ -12,6 +12,9 @@ router.get('/', (req, res) => {
                 console.log(error);
                 throw new Error('Cannot connect to smart Servers. Please checkout connection.');
             }
+            if (typeof(body) === 'string' && body[0] === '<'){
+                throw new Error('smart server error!');
+            }
             if (typeof(JSON.parse(body)) != 'object') {
                 console.log(typeof(JSON.parse(body)));
                 console.log(JSON.parse(body));

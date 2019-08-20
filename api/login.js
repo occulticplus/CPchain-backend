@@ -29,6 +29,9 @@ router.post('/', (req, res) => {
         request(options, (error, response, body) => {
             if (error) throw new Error(error);
             console.log(body);
+            if (typeof(body) === 'string' && body[0] === '<'){
+                throw new Error('smart server error!');
+            }
             const ret = JSON.parse(body)
             if (ret === {} || ret.error.what === 'Already unlocked') {
                 Config.userName = req.body.walletName;

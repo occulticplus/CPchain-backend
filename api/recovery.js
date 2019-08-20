@@ -45,6 +45,9 @@ router.post('/', (req, res) => {
                     throw new Error('Cannot get the hash value of picture');
                 }
                 console.log(body);
+                if (typeof(body) === 'string' && body[0] === '<'){
+                    throw new Error('smart server error!');
+                }
                 picInfo.hash = JSON.parse(body).hash;
                 resolve();
             })
@@ -62,6 +65,9 @@ router.post('/', (req, res) => {
                         throw new Error('Cannot detect if the picture is edited!');
                     }
                     console.log(body);
+                    if (typeof(body) === 'string' && body[0] === '<'){
+                        throw new Error('smart server error!');
+                    }
                     resolve(JSON.parse(body).result);
                 })
             });

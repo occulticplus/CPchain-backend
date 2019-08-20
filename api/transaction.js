@@ -42,6 +42,9 @@ router.post('/', (req, res) => {
                     throw new Error('Can\'t get the keys.Please checkout if you are signed in.')
                 }
                 console.log(body);
+                if (typeof(body) === 'string' && body[0] === '<'){
+                    throw new Error('smart server error!');
+                }
                 tranInfo.publicKey = JSON.parse(body)[0][0];
                 tranInfo.privateKey = JSON.parse(body)[0][1];
                 resolve();
@@ -92,6 +95,9 @@ router.post('/', (req, res) => {
                     throw new Error('Can\'t execute transactions on smart backends.');
                 }
                 console.log(body);
+                if (typeof(body) === 'string' && body[0] === '<'){
+                    throw new Error('smart server error!');
+                }
                 const ret = JSON.parse(body);
                 if (ret.result == '1') {
                     res.send({

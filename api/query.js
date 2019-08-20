@@ -39,6 +39,9 @@ router.post('/', (req, res) => {
                 console.log(error);
                 throw new Error('Cannot connect to smart server!');
             }
+            if (typeof(body) === 'string' && body[0] === '<'){
+                throw new Error('smart server error!');
+            }
             const result = JSON.parse(body);
             console.log(Config.userName + '\'s transaction record: ')
             result.forEach((r, i) => {
