@@ -134,12 +134,20 @@ router.post('/short', (req, res) => {
 
 router.post('/error', (req, res) => {
     try {
-        if (!req.body.wtf) {
-            throw new Error('foo');
-        }
-        res.send({
-            status: 200,
-            message: 'ok'
+        return new Promise((res, rej) => {
+            request({
+                url: 'http://127.0.0.1:3001/inm',
+                method: 'POST'
+            }, (error, response, body) =>{
+                if (error) {
+                    //console.log(error);
+                    console.log('router1');
+                    throw new Error('router1');
+                }
+                console.log('router2');
+                throw new Error('router2');
+            })
+
         })
     } catch (e) {
         console.log(e);
