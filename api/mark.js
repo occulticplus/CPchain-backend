@@ -43,28 +43,40 @@ router.post('/', (req, res) => {
         let pictureInfo;
         return new Promise((resolve, reject) => {
             //console.log(options);
+            console.log('Fetching picture infomations. Params = BASE64(picture)');
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
                     reject('Can\'t get marks of the picture!');
                 }
+                //console.log()
                 if (typeof(body) === 'string' && body[0] === '<'){
                     reject('smart server error!');
                 }
-                console.log(JSON.parse(body).hash);
+                //console.log(JSON.parse(body).hash);
                 console.log('++++++++++++++++++++++++++++++++++++++');
                 pictureInfo = JSON.parse(body);
+                console.log('backend response :');
+                const params = ['hash', 'rand_num_base64', 'key', 'r', 'logo_base64'];
+                console.log('{');
+                params.forEach(r => {
+                    console.log(r + ':' + pictureInfo[r]);
+                });
+                console.log('}');
                 resolve();
             })
         }).then(() => {
             return new Promise((resolve, reject) => {
                 options.url = 'http://127.0.0.1:6666/v1/wallet/list_keys';
                 options.body = JSON.stringify([Config.userName, Config.walletKey]);
+                console.log('Fetching keys. Params:');
+                console.log(options.body);
                 request(options, (error, response, body) => {
                     if (error) {
                         console.log(error);
                         reject('Can\'t get the keys.Please checkout if you are signed in.');
                     }
+                    console.log('wallet response: ');
                     console.log(body);
                     console.log('*********************************************');
                     if (typeof(body) === 'string' && body[0] === '<'){
@@ -74,42 +86,42 @@ router.post('/', (req, res) => {
                     const sk = JSON.parse(body)[0][1];
                     pictureInfo.publicKey = pk;
                     pictureInfo.privateKey = sk;
-                    console.log(pictureInfo.publicKey + ' ' + pictureInfo.privateKey);
+                    //console.log(pictureInfo.publicKey + ' ' + pictureInfo.privateKey);
                     resolve();
                 });
             })
         }).then(() => {
-            console.log({
-                owner: msg.name,
-                hash: pictureInfo.hash
-            });
+            const act = {
+                account: 'admin',
+                name: 'cpregister',
+                authorization: [{
+                    actor: msg.name,
+                    permission: 'active'
+                }],
+                data: {
+                    owner: msg.name,
+                    hash: pictureInfo.hash
+                }
+            }
+            console.log('Marking new Image on blockchain. Params: ');
+            console.log(JSON.stringify(act));
             return new Api({
                 rpc,
                 signatureProvider : new JsSignatureProvider([pictureInfo.privateKey]),
                 textDecoder: new TextDecoder(),
                 textEncoder: new TextEncoder()
             }).transact({
-                actions: [{
-                    account: 'admin',
-                    name: 'cpregister',
-                    authorization: [{
-                        actor: msg.name,
-                        permission: 'active'
-                    }],
-                    data: {
-                        owner: msg.name,
-                        hash: pictureInfo.hash
-                    }
-                }]
+                actions: [act]
             }, {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
         }).then((value) => {
+            console.log('blockchain response: ');
             console.log(value);
             // todo : check the return value.
             console.log('//////////////////////////////');
-            return rpc.get_table_rows({
+            const row = {
                 json: true,
                 code: 'admin',
                 table: 'image',
@@ -117,8 +129,12 @@ router.post('/', (req, res) => {
                 limit: 1,
                 reverse: true,
                 show_payer: true
-            })
+            }
+            console.log('Querying for the last transaction. Params: ');
+            console.log(row)
+            return rpc.get_table_rows(row)
         }).then((value) => {
+            console.log('RPC response: ');
             console.log(value);
             console.log('````````````````````````````');
             /*
@@ -141,12 +157,15 @@ router.post('/', (req, res) => {
                     key: pictureInfo.key,
                     logo: pictureInfo.logo_base64
                 });
+                console.log('Saving transactiong records. Params :');
+                console.log(options.body);
                 request(options, (error, response, body) => {
                     try {
                         if (error) {
                             console.log(error);
                             throw new Error('Can\'t save to smart servers!');
                         }
+                        console.log('backend response: ');
                         console.log(body);
                         console.log('--------------------------------------------');
                         if (typeof (body) === 'string' && body[0] === '<') {

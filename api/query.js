@@ -33,7 +33,7 @@ router.post('/', (req, res) => {
             header: {'Content-type': 'applications/json'},
             body: JSON.stringify({name: Config.userName})
         }
-
+        console.log('Querying for private transaction logs. Params username = ' + Config.userName);
         request(options, (error, response, body) => {
             try {
                 if (error) {

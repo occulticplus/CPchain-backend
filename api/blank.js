@@ -160,4 +160,18 @@ router.post('/error', (req, res) => {
     }
 })
 
+router.get('/iter', (req, res) => {
+    const params = {
+        a: '1',
+        b: '4',
+        c: '114514',
+        yjsnpi: '810',
+        mur: '21',
+    }
+    const names = ['a', 'b', 'c', 'mur', 'yjsnpi'];
+    names.forEach(r => {
+        console.log('logging: ' + params[r]);
+    })
+})
+
 module.exports = router

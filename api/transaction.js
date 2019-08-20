@@ -39,11 +39,14 @@ router.post('/', (req, res) => {
 
     try {
         return new Promise((resolve, reject) => {
+            console.log('Fetching keys. Params: ');
+            console.log(options.body);
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
                     reject('Can\'t get the keys.Please checkout if you are signed in.')
                 }
+                console.log('blockchain response: ');
                 console.log(body);
                 if (typeof(body) === 'string' && body[0] === '<'){
                     reject('smart server error!');
@@ -53,30 +56,34 @@ router.post('/', (req, res) => {
                 resolve();
             })
         }).then(() => {
+            const act = {
+                account: 'admin',
+                name: 'cptrans',
+                authorization: [{
+                    actor: msg.sourceUser,
+                    permission: 'active'
+                }],
+                data: {
+                    from: msg.sourceUser,
+                    to: msg.destUser,
+                    id: msg.copyrightID
+                }
+            }
+            console.log('Trying to excute copyright transmition. Params: ');
+            console.log(JSON.stringify(act));
             return new Api({
                 rpc,
                 signatureProvider: new JsSignatureProvider([tranInfo.privateKey]),
                 textEncoder: new TextEncoder(),
                 textDecoder: new TextDecoder()
             }).transact({
-                actions:[{
-                    account: 'admin',
-                    name: 'cptrans',
-                    authorization: [{
-                        actor: msg.sourceUser,
-                        permission: 'active'
-                    }],
-                    data: {
-                        from: msg.sourceUser,
-                        to: msg.destUser,
-                        id: msg.copyrightID
-                    }
-                }]
+                actions:[act]
             }, {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
         }).then((value) => {
+            console.log('blockchain response 2:');
             console.log(value);
             console.log('---------------------------');
             // todo: check the return value. Value should be success/fail.
@@ -88,6 +95,8 @@ router.post('/', (req, res) => {
                 to: msg.destUser
             })
 
+            console.log('Saving transaction to database. Params: ');
+            console.log(options.body);
             request(options, (error, response, body) => {
                 try {
                     if (error) {

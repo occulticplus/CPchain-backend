@@ -26,6 +26,8 @@ router.post('/', (req, res) => {
             header : {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             body : JSON.stringify([msg.walletName, msg.walletKey])
         }
+        console.log('Fetching the wallet. Params');
+        console.log(options.body);
         request(options, (error, response, body) => {
             try {
                 if (error) throw new Error(error);
@@ -41,7 +43,8 @@ router.post('/', (req, res) => {
                     res.cookie('walletKey', req.body.walletKey);
                     res.cookie('userName', req.body.name);
                     */
-                    console.log(Config.userName);
+                    console.log('wallet response:');
+                    console.log(body);
                     console.log('ok unlocked the wallet.');
                     res.send({
                         status: 200,

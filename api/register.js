@@ -39,11 +39,12 @@ router.post('/', async (req, res) => {
             'body' : '"' + msg.name + '"',
         };
         return await new Promise((resolve, reject) => {
-            console.log('want to create wallet.');
+            console.log('want to create wallet. params: ');
+            console.log(options.body);
             request(options, (error, response, body) => {
                 if (error) reject(error);
                 //walletKey = body;
-                console.log('wallet recall1:');
+                console.log('wallet response 1:');
                 console.log(body);
                 if(typeof(body) === 'string') {
                     /* some problems. In body is the wallet pwd. Write it out to file.*/
@@ -51,10 +52,10 @@ router.post('/', async (req, res) => {
                     walletRet.walletName = msg.name;
                     walletInfo += 'Wallet Password : ' + body + '\n';
                     walletRet.walletPassword = body;
-                    res();
+                    resolve();
                 } else {
                     console.log(body);
-                    rej('Error: Cannot create wallet');
+                    reject('Error: Cannot create wallet');
                 }
             });
 
@@ -75,41 +76,47 @@ router.post('/', async (req, res) => {
                 options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
                 options.body = JSON.stringify([msg.name, accountInfo.privateKey]);
                 options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+                console.log('Importing keys. Params: ');
+                console.log(options.body);
                 request(options, (error, response, body) => {
                     if (error) throw new Error(error);
+                    console.log('wallet response 2: ');
                     console.log(body);
                 })
-                return api.transact({
-                    actions: [{
-                        account: 'eosio',
-                        name: 'newaccount',
-                        authorization: [{
-                            actor: 'eosio',
-                            permission: 'active',
-                        }],
-                        data: {
-                            creator: 'eosio',
-                            name: msg.name,
-                            owner: {
-                                threshold: 1,
-                                keys: [{
-                                    key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
-                                    weight: 1
-                                }],
-                                accounts: [],
-                                waits: []
-                            },
-                            active: {
-                                threshold: 1,
-                                keys: [{
-                                    key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
-                                    weight: 1
-                                }],
-                                accounts: [],
-                                waits: []
-                            },
+                console.log('Creating a new account on blockchain. Params: ');
+                const act = {
+                    account: 'eosio',
+                    name: 'newaccount',
+                    authorization: [{
+                        actor: 'eosio',
+                        permission: 'active',
+                    }],
+                    data: {
+                        creator: 'eosio',
+                        name: msg.name,
+                        owner: {
+                            threshold: 1,
+                            keys: [{
+                                key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
+                                weight: 1
+                            }],
+                            accounts: [],
+                            waits: []
                         },
-                    }]
+                        active: {
+                            threshold: 1,
+                            keys: [{
+                                key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
+                                weight: 1
+                            }],
+                            accounts: [],
+                            waits: []
+                        },
+                    },
+                }
+                console.log(JSON.stringify(act));
+                return api.transact({
+                    actions: [act]
                 }, {
                     blocksBehind: 3,
                     expireSeconds: 30,
@@ -121,32 +128,39 @@ router.post('/', async (req, res) => {
                     message: e
                 })
             }
-        }).then(()=>{
+        }).then(value => {
+            console.log('blockchain response: ');
+            console.log(JSON.stringify(value));
             console.log(accountInfo.privateKey);
             const sigProvider = new JsSignatureProvider([accountInfo.privateKey]);
+            const act = {
+                account: 'admin',
+                name: 'userregister',
+                authorization: [{
+                    actor: msg.name,
+                    permission: 'active',
+                }],
+                data: {
+                    uname: msg.name,
+                    IDcard: msg.IDcard,
+                    email: msg.email
+                },
+            }
+            console.log('Creating new user. Params: ');
+            console.log(JSON.stringify(act));
             return new Api({ rpc,
                 signatureProvider: sigProvider,
                 textDecoder: new TextDecoder(),
                 textEncoder: new TextEncoder()
             }).transact({
-                actions : [{
-                    account: 'admin',
-                    name: 'userregister',
-                    authorization: [{
-                        actor: msg.name,
-                        permission: 'active',
-                    }],
-                    data: {
-                        uname: msg.name,
-                        IDcard: msg.IDcard,
-                        email: msg.email
-                    },
-                }],
+                actions : [act],
             }, {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
-        }).then(()=>{
+        }).then(value => {
+            console.log('blockchain response2: ');
+            console.log(JSON.stringify(value));
             Config.userName = walletRet.accountName;
             Config.walletKey = walletRet.walletPassword;
             console.log('Wallet Information :\n' + walletInfo);

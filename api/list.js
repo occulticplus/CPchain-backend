@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
             method: 'GET',
             url: 'http://127.0.0.1:5000/api/list'
         }
+        console.log('Querying for anycast transactions. No params.');
         request(options, (error, response, body) => {
             try {
                 if (error) {
@@ -21,6 +22,7 @@ router.get('/', (req, res) => {
                     console.log(JSON.parse(body));
                     throw new Error('Cannot get valid results from smart Servers!');
                 }
+                console.log('blockchain response: ');
                 const result = JSON.parse(body);
                 result.forEach((r, i) => {
                     console.log('record ' + i + ':');

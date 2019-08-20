@@ -40,12 +40,15 @@ router.post('/', (req, res) => {
         }
 
         return new Promise((resolve, reject) => {
+            console.log('Fetching informations of the picture. Params: ');
+            console.log(options.body);
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
                     reject('Cannot get the hash value of picture');
                     //throw new Error('Cannot get the hash value of picture');
                 }
+                console.log('backend response: ');
                 console.log(body);
                 if (typeof(body) === 'string' && body[0] === '<'){
                     reject('smart server error!');
@@ -61,11 +64,13 @@ router.post('/', (req, res) => {
                     id: msg.id,
                     base: msg.base
                 })
+                console.log('Checking if the picuture is edited. Param id = ' + msg.id);
                 request(options, (error, response, body) => {
                     if (error) {
                         console.log(error);
-                        reject('Cannot detect if the picture is edited!');
+                        reject('Cannot detect whether the picture is edited!');
                     }
+                    console.log('backend response 2:');
                     console.log(body);
                     if (typeof(body) === 'string' && body[0] === '<'){
                         reject('smart server error!');
@@ -86,12 +91,14 @@ router.post('/', (req, res) => {
                 options.body = JSON.stringify({
                     tested: msg.base
                 })
+                console.log('Trying to recover the picture.');
                 request(options, (error, response, body) => {
                     try {
                         if (error) {
                             console.log(error);
                             throw new Error('Cannot connect to smart server.');
                         }
+                        console.log('backend response 3 :');
                         console.log(body);
                         if (typeof (body) === 'string' && body[0] === '<') {
                             throw new Error('smart server Errors!');
