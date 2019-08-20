@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const request = require('request');
 const Config = require('../config/basic');
+//const Error = require('error');
 
 const { Api, JsonRpc, RpcError, Numeric } = require('eosjs');
 const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig');      // development only

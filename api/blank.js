@@ -131,4 +131,26 @@ router.post('/short', (req, res) => {
     return;
 })
 
+
+router.post('/error', (req, res) => {
+    try {
+        if (!req.body.wtf) {
+            throw new Error('foo');
+        }
+        res.send({
+            status: 200,
+            message: 'ok'
+        })
+    } catch (e) {
+        console.log(e);
+        console.log('++++++++++++++++++++++++++');
+        res.send({
+            status: 500,
+            message: 'no'
+        })
+    } finally {
+        return;
+    }
+})
+
 module.exports = router
