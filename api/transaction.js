@@ -27,7 +27,10 @@ router.post('/', (req, res) => {
     let tranInfo = {};
 
     if (Config.userName === null || Config.walletKey === null) {
-        throw new Error('The user has not signed in. Please first signed in to unlock the wallet.');
+        res.send({
+            status: 500,
+            message: 'The user has not signed in. Please first signed in to unlock the wallet.'
+        });
     }
     msg.sourceUser = Config.userName;
     options.body = JSON.stringify([msg.sourceUser, Config.walletKey]);
@@ -39,11 +42,11 @@ router.post('/', (req, res) => {
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
-                    throw new Error('Can\'t get the keys.Please checkout if you are signed in.')
+                    reject('Can\'t get the keys.Please checkout if you are signed in.')
                 }
                 console.log(body);
                 if (typeof(body) === 'string' && body[0] === '<'){
-                    throw new Error('smart server error!');
+                    reject('smart server error!');
                 }
                 tranInfo.publicKey = JSON.parse(body)[0][0];
                 tranInfo.privateKey = JSON.parse(body)[0][1];
@@ -73,10 +76,6 @@ router.post('/', (req, res) => {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
-        }).catch(error => {
-            console.log(error);
-            //console.log('Please ensure the sourceUser is the wallet owner.');
-            throw new Error('Cannot execute operatoins on chains.')
         }).then((value) => {
             console.log(value);
             console.log('---------------------------');
@@ -90,29 +89,43 @@ router.post('/', (req, res) => {
             })
 
             request(options, (error, response, body) => {
-                if (error) {
-                    console.log(error);
-                    throw new Error('Can\'t execute transactions on smart backends.');
-                }
-                console.log(body);
-                if (typeof(body) === 'string' && body[0] === '<'){
-                    throw new Error('smart server error!');
-                }
-                const ret = JSON.parse(body);
-                if (ret.result == '1') {
+                try {
+                    if (error) {
+                        console.log(error);
+                        throw new Error('Can\'t execute transactions on smart backends.');
+                    }
+                    console.log(body);
+                    if (typeof (body) === 'string' && body[0] === '<') {
+                        throw new Error('smart server error!');
+                    }
+                    const ret = JSON.parse(body);
+                    if (ret.result == '1') {
+                        res.send({
+                            status: 200,
+                            message: 'successfully transacted copyright.'
+                        }).end();
+                    } else if (ret.result == '0') {
+                        res.send({
+                            status: 400,
+                            message: 'failed to transact copyright.Something went wrong.'
+                        }).end();
+                    } else {
+                        console.log('unexpected end.');
+                        throw new Error('Unhandled result value!');
+                    }
+                } catch (e) {
+                    console.log(e);
                     res.send({
-                        status: 200,
-                        message: 'successfully transacted copyright.'
-                    }).end();
-                } else if (ret.result == '0') {
-                    res.send({
-                        status: 400,
-                        message: 'failed to transact copyright.Something went wrong.'
-                    }).end();
-                } else {
-                    console.log('unexpected end.');
-                    throw new Error('Unhandled result value!');
+                        status: 500,
+                        message: e.message
+                    })
                 }
+            })
+        }).catch(error => {
+            console.log(error);
+            res.send({
+                status: 500,
+                message: error
             })
         });
     } catch(e) {

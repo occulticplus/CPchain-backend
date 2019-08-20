@@ -46,10 +46,10 @@ router.post('/', (req, res) => {
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
-                    throw new Error('Can\'t get marks of the picture!');
+                    reject('Can\'t get marks of the picture!');
                 }
                 if (typeof(body) === 'string' && body[0] === '<'){
-                    throw new Error('smart server error!');
+                    reject('smart server error!');
                 }
                 console.log(JSON.parse(body).hash);
                 console.log('++++++++++++++++++++++++++++++++++++++');
@@ -63,12 +63,12 @@ router.post('/', (req, res) => {
                 request(options, (error, response, body) => {
                     if (error) {
                         console.log(error);
-                        throw new Error('Can\'t get the keys.Please checkout if you are signed in.');
+                        reject('Can\'t get the keys.Please checkout if you are signed in.');
                     }
                     console.log(body);
                     console.log('*********************************************');
                     if (typeof(body) === 'string' && body[0] === '<'){
-                        throw new Error('smart server error!');
+                        reject('smart server error!');
                     }
                     const pk = JSON.parse(body)[0][0];
                     const sk = JSON.parse(body)[0][1];
@@ -105,9 +105,6 @@ router.post('/', (req, res) => {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
-        }).catch(error => {
-            console.log(error);
-            throw new Error('The copyright already exists! Cannot apply for new copyrights.')
         }).then((value) => {
             console.log(value);
             // todo : check the return value.
@@ -124,9 +121,11 @@ router.post('/', (req, res) => {
         }).then((value) => {
             console.log(value);
             console.log('````````````````````````````');
+            /*
             if (value.rows[0].data.id == null) {
                 throw new Error('Cannot read id of the transaction.');
             }
+            */
             const id = value.rows[0].data.id;
             console.log('id == ' + id);
             return new Promise((resolve, reject) => {
@@ -143,34 +142,42 @@ router.post('/', (req, res) => {
                     logo: pictureInfo.logo_base64
                 });
                 request(options, (error, response, body) => {
-                    if (error) {
-                        console.log(error);
-                        throw new Error('Can\'t save to smart servers!');
-                    }
-                    console.log(body);
-                    console.log('--------------------------------------------');
-                    if (typeof(body) === 'string' && body[0] === '<'){
-                        throw new Error('smart server error!');
-                    }
-                    if (JSON.parse(body).result == 1) {
-                        console.log('Succeeded: successfully checked the picture!');
-                        res.send({
-                            status: 200,
-                            message: 'The copyright of the picture has signed!',
-                            data: JSON.stringify({
-                                id: id
-                            })
-                        }).end();
-                    } else if (JSON.parse(body).result == 0) {
-                        console.log('Failed: the copyright has conflicted.');
+                    try {
+                        if (error) {
+                            console.log(error);
+                            throw new Error('Can\'t save to smart servers!');
+                        }
+                        console.log(body);
+                        console.log('--------------------------------------------');
+                        if (typeof (body) === 'string' && body[0] === '<') {
+                            throw new Error('smart server error!');
+                        }
+                        if (JSON.parse(body).result == 1) {
+                            console.log('Succeeded: successfully checked the picture!');
+                            res.send({
+                                status: 200,
+                                message: 'The copyright of the picture has signed!',
+                                data: JSON.stringify({
+                                    id: id
+                                })
+                            }).end();
+                        } else if (JSON.parse(body).result == 0) {
+                            console.log('Failed: the copyright has conflicted.');
+                            res.send({
+                                status: 500,
+                                message: 'the copyright has conflicted with other images.'
+                            }).end();
+                        } else {
+                            console.log('unexpected end.');
+                            console.log('typeof result: ' + typeof (body) + '\nbody:' + body);
+                            throw new Error('Unhandled result type!');
+                        }
+                    } catch(e) {
+                        console.log(e);
                         res.send({
                             status: 500,
-                            message: 'the copyright has conflicted with other images.'
-                        }).end();
-                    } else {
-                        console.log('unexpected end.');
-                        console.log('typeof result: ' + typeof(body) + '\nbody:' + body);
-                        throw new Error('Unhandled result type!');
+                            message: e.message
+                        })
                     }
                 })
             })

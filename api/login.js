@@ -27,31 +27,40 @@ router.post('/', (req, res) => {
             body : JSON.stringify([msg.walletName, msg.walletKey])
         }
         request(options, (error, response, body) => {
-            if (error) throw new Error(error);
-            console.log(body);
-            if (typeof(body) === 'string' && body[0] === '<'){
-                throw new Error('smart server error!');
-            }
-            const ret = JSON.parse(body)
-            if (ret === {} || ret.error.what === 'Already unlocked') {
-                Config.userName = req.body.walletName;
-                Config.walletKey = req.body.walletKey;
-                /*
-                res.cookie('walletKey', req.body.walletKey);
-                res.cookie('userName', req.body.name);
-                */
-                console.log(Config.userName);
-                console.log('ok unlocked the wallet.');
-                res.send({
-                    status: 200,
-                    msg: 'ok unlocked the wallet.',
-                });
-            } else {
-                console.log('Failed to unlock the wallet: The walletKey is not correct');
+            try {
+                if (error) throw new Error(error);
+                console.log(body);
+                if (typeof (body) === 'string' && body[0] === '<') {
+                    throw new Error('smart server error!');
+                }
+                const ret = JSON.parse(body)
+                if (ret === {} || ret.error.what === 'Already unlocked') {
+                    Config.userName = req.body.walletName;
+                    Config.walletKey = req.body.walletKey;
+                    /*
+                    res.cookie('walletKey', req.body.walletKey);
+                    res.cookie('userName', req.body.name);
+                    */
+                    console.log(Config.userName);
+                    console.log('ok unlocked the wallet.');
+                    res.send({
+                        status: 200,
+                        msg: 'ok unlocked the wallet.',
+                    });
+                } else {
+                    console.log('Failed to unlock the wallet: The walletKey is not correct');
+                    res.send({
+                        status: 500,
+                        msg: 'The key of wallet is wrong. Please check your password.'
+                    });
+                }
+            } catch(e) {
+                console.log(e);
                 res.send({
                     status: 500,
-                    msg: 'The key of wallet is wrong. Please check your password.'
+                    message: e.message
                 });
+                return;
             }
         })
     } catch (e) {

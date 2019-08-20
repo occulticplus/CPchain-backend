@@ -35,28 +35,38 @@ router.post('/', (req, res) => {
         }
 
         request(options, (error, response, body) => {
-            if (error) {
-                console.log(error);
-                throw new Error('Cannot connect to smart server!');
-            }
-            if (typeof(body) === 'string' && body[0] === '<'){
-                throw new Error('smart server error!');
-            }
-            const result = JSON.parse(body);
-            console.log(Config.userName + '\'s transaction record: ')
-            result.forEach((r, i) => {
-                console.log("the " + i + "th record:");
-                console.log({
-                    id: r.id,
-                    hash: r.hash
-                })
-            });
+            try {
+                if (error) {
+                    console.log(error);
+                    throw new Error('Cannot connect to smart server!');
+                }
+                if (typeof (body) === 'string' && body[0] === '<') {
+                    throw new Error('smart server error!');
+                }
+                const result = JSON.parse(body);
+                console.log(Config.userName + '\'s transaction record: ')
+                result.forEach((r, i) => {
+                    console.log("the " + i + "th record:");
+                    console.log({
+                        id: r.id,
+                        hash: r.hash
+                    })
+                });
 
-            res.send({
-                status: 200,
-                message: 'successfully got the user\'s tranaction list.',
-                data: body
-            }).end();
+                res.send({
+                    status: 200,
+                    message: 'successfully got the user\'s tranaction list.',
+                    data: body
+                });
+                return;
+            } catch (e) {
+                console.log(e);
+                res.send({
+                    status: 200,
+                    message: e.message
+                });
+                return;
+            }
         })
     } catch (e) {
         console.log(e);

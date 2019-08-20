@@ -38,10 +38,10 @@ router.post('/', async (req, res) => {
             'headers' : { 'content-type' : 'application/json'},
             'body' : '"' + msg.name + '"',
         };
-        return await new Promise((res, rej) => {
+        return await new Promise((resolve, reject) => {
             console.log('want to create wallet.');
             request(options, (error, response, body) => {
-                if (error) throw new Error(error);
+                if (error) reject(error);
                 //walletKey = body;
                 console.log('wallet recall1:');
                 console.log(body);
@@ -58,63 +58,69 @@ router.post('/', async (req, res) => {
                 }
             });
 
-        }).catch((value) => {
-            throw new Error(value);
         }).then(() => {
             return Ecc.randomKey();
         }).then(privateKey => {
-            console.log('Private Key :\t', privateKey);
-            console.log('Public Key :\t', Ecc.privateToPublic(privateKey));
-            accountInfo.publicKey = Ecc.privateToPublic(privateKey);
-            accountInfo.privateKey = privateKey;
-            walletInfo += 'Account Name : ' + msg.name + '\n';
-            walletRet.accountName = msg.name;
-            walletInfo += 'Account Private Key : ' + privateKey + '\n';
-            walletRet.privateKey = privateKey;
-            walletInfo += 'Account Public Key : ' + Ecc.privateToPublic(privateKey) + '\n';
-            walletRet.publicKey = Ecc.privateToPublic(privateKey);
-            options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
-            options.body = JSON.stringify([msg.name, accountInfo.privateKey]);
-            options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-            request(options, (error, response, body) => {
-                if (error) throw new Error(error);
-                console.log(body);
-            })
-            return api.transact({
-                actions: [{
-                    account: 'eosio',
-                    name: 'newaccount',
-                    authorization: [{
-                        actor: 'eosio',
-                        permission: 'active',
-                    }],
-                    data: {
-                        creator: 'eosio',
-                        name: msg.name,
-                        owner: {
-                            threshold: 1,
-                            keys: [{
-                                key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
-                                weight: 1
-                            }],
-                            accounts: [],
-                            waits: []
+            try {
+                console.log('Private Key :\t', privateKey);
+                console.log('Public Key :\t', Ecc.privateToPublic(privateKey));
+                accountInfo.publicKey = Ecc.privateToPublic(privateKey);
+                accountInfo.privateKey = privateKey;
+                walletInfo += 'Account Name : ' + msg.name + '\n';
+                walletRet.accountName = msg.name;
+                walletInfo += 'Account Private Key : ' + privateKey + '\n';
+                walletRet.privateKey = privateKey;
+                walletInfo += 'Account Public Key : ' + Ecc.privateToPublic(privateKey) + '\n';
+                walletRet.publicKey = Ecc.privateToPublic(privateKey);
+                options.url = 'http://127.0.0.1:6666/v1/wallet/import_key';
+                options.body = JSON.stringify([msg.name, accountInfo.privateKey]);
+                options.headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+                request(options, (error, response, body) => {
+                    if (error) throw new Error(error);
+                    console.log(body);
+                })
+                return api.transact({
+                    actions: [{
+                        account: 'eosio',
+                        name: 'newaccount',
+                        authorization: [{
+                            actor: 'eosio',
+                            permission: 'active',
+                        }],
+                        data: {
+                            creator: 'eosio',
+                            name: msg.name,
+                            owner: {
+                                threshold: 1,
+                                keys: [{
+                                    key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
+                                    weight: 1
+                                }],
+                                accounts: [],
+                                waits: []
+                            },
+                            active: {
+                                threshold: 1,
+                                keys: [{
+                                    key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
+                                    weight: 1
+                                }],
+                                accounts: [],
+                                waits: []
+                            },
                         },
-                        active: {
-                            threshold: 1,
-                            keys: [{
-                                key: Numeric.convertLegacyPublicKey(accountInfo.publicKey),
-                                weight: 1
-                            }],
-                            accounts: [],
-                            waits: []
-                        },
-                    },
-                }]
-            }, {
-                blocksBehind: 3,
-                expireSeconds: 30,
-            })
+                    }]
+                }, {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                })
+            } catch(e) {
+                console.log(e);
+                res.send({
+                    status: 500,
+                    message: e
+                })
+            }
         }).then(()=>{
             console.log(accountInfo.privateKey);
             const sigProvider = new JsSignatureProvider([accountInfo.privateKey]);
@@ -140,9 +146,6 @@ router.post('/', async (req, res) => {
                 blocksBehind: 3,
                 expireSeconds: 30,
             });
-        }).catch((value)=>{
-            console.log(value);
-            throw new Error('promise rejected');
         }).then(()=>{
             Config.userName = walletRet.accountName;
             Config.walletKey = walletRet.walletPassword;
@@ -158,8 +161,15 @@ router.post('/', async (req, res) => {
                 message : "Successfully created account!\n" + walletInfo
             })
             */
+        }).catch(error => {
+            console.log(error);
+            res.send({
+                status: 500,
+                message: error
+            })
+            return;
         })
-        console.log('unexpected end');
+        //console.log('unexpected end');
 
     } catch (e) {
         console.log(e);

@@ -43,17 +43,18 @@ router.post('/', (req, res) => {
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
-                    throw new Error('Cannot get the hash value of picture');
+                    reject('Cannot get the hash value of picture');
+                    //throw new Error('Cannot get the hash value of picture');
                 }
                 console.log(body);
                 if (typeof(body) === 'string' && body[0] === '<'){
-                    throw new Error('smart server error!');
+                    reject('smart server error!');
                 }
                 picInfo.hash = JSON.parse(body).hash;
                 resolve();
             })
         }).then(() => {
-            return new Promise( (resolve, response) => {
+            return new Promise( (resolve, reject) => {
                 // todo: check or cpcheck?
                 options.url = 'http://127.0.0.1:5000/api/check'
                 options.body = JSON.stringify({
@@ -63,11 +64,11 @@ router.post('/', (req, res) => {
                 request(options, (error, response, body) => {
                     if (error) {
                         console.log(error);
-                        throw new Error('Cannot detect if the picture is edited!');
+                        reject('Cannot detect if the picture is edited!');
                     }
                     console.log(body);
                     if (typeof(body) === 'string' && body[0] === '<'){
-                        throw new Error('smart server error!');
+                        reject('smart server error!');
                     }
                     resolve(JSON.parse(body).result);
                 })
@@ -86,38 +87,49 @@ router.post('/', (req, res) => {
                     tested: msg.base
                 })
                 request(options, (error, response, body) => {
-                    if (error) {
-                        console.log(error);
-                        throw new Error('Cannot connect to smart server.');
-                    }
-                    console.log(body);
-                    if (typeof(body) === 'string' && body[0] === '<') {
-                        throw new Error('smart server Errors!');
-                    }
-                    if (JSON.parse(body).base64) {
+                    try {
+                        if (error) {
+                            console.log(error);
+                            throw new Error('Cannot connect to smart server.');
+                        }
+                        console.log(body);
+                        if (typeof (body) === 'string' && body[0] === '<') {
+                            throw new Error('smart server Errors!');
+                        }
+                        if (JSON.parse(body).base64) {
+                            res.send({
+                                status: 201,
+                                message: 'successfully recovered the picture.',
+                                data: {
+                                    base64: JSON.parse(body).base64
+                                }
+                            });
+                            return;
+                        } else {
+                            res.send({
+                                status: 205,
+                                message: 'Cannot operate recovery. Something went wrong.'
+                            })
+                        }
+                    } catch(e) {
+                        console.log(e);
                         res.send({
-                            status: 201,
-                            message: 'successfully recovered the picture.',
-                            data: {
-                                base64: JSON.parse(body).base64
-                            }
-                        });
-                        return;
-                    } else {
-                        res.send({
-                            status: 205,
-                            message: 'Cannot operate recovery. Something went wrong.'
+                            status: 500,
+                            message: e.message
                         })
                     }
                 })
             } else {
                 console.log('Unexpected return value');
-                throw new Error('Unexpected return value');
+                res.send({
+                    status: 500,
+                    message: 'Cannot understand backend\'s reply.'
+                })
             }
         }).catch(error => {
             res.send({
                 status: 500,
-                message: JSON.stringify(error)
+                message: error
             });
             return;
         })
