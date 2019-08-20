@@ -134,12 +134,21 @@ router.post('/short', (req, res) => {
 
 router.post('/error', (req, res) => {
     try {
-        if (!req.body.wtf) {
-            throw new Error('foo');
-        }
-        res.send({
-            status: 200,
-            message: 'ok'
+        return new Promise((res, rej) => {
+            request({
+                url: 'http://127.0.0.1:3001/inminminm',
+                method: 'POST'
+            }, (error, response, body) => {
+                if (error) {
+                    console.log('============');
+                    console.log(error);
+                    throw new Error('route1');
+                }
+                throw new Error('route2');
+            })
+        }).catch(value => {
+            console.log(value);
+            throw new Error('route3');
         })
     } catch (e) {
         console.log(e);
@@ -148,8 +157,6 @@ router.post('/error', (req, res) => {
             status: 500,
             message: 'no'
         })
-    } finally {
-        return;
     }
 })
 
