@@ -136,18 +136,19 @@ router.post('/error', (req, res) => {
     try {
         return new Promise((res, rej) => {
             request({
-                url: 'http://127.0.0.1:3001/inm',
+                url: 'http://127.0.0.1:3001/inminminm',
                 method: 'POST'
-            }, (error, response, body) =>{
+            }, (error, response, body) => {
                 if (error) {
-                    //console.log(error);
-                    console.log('router1');
-                    throw new Error('router1');
+                    console.log('============');
+                    console.log(error);
+                    throw new Error('route1');
                 }
-                console.log('router2');
-                throw new Error('router2');
+                throw new Error('route2');
             })
-
+        }).catch(value => {
+            console.log(value);
+            throw new Error('route3');
         })
     } catch (e) {
         console.log(e);
@@ -156,8 +157,6 @@ router.post('/error', (req, res) => {
             status: 500,
             message: 'no'
         })
-    } finally {
-        return;
     }
 })
 
