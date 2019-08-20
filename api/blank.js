@@ -114,4 +114,21 @@ router.get('/load', (req, res) => {
 
 })
 
+router.post('/short', (req, res) => {
+    if (!req.body.wtf) {
+        console.log('route1');
+        res.send({
+            status: 200,
+            message: 'qqqxx'
+        }).end();
+        return;
+    }
+    console.log('route2');
+    res.send({
+        status: 500,
+        message: 'xxqqq'
+    }).end();
+    return;
+})
+
 module.exports = router

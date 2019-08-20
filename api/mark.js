@@ -130,7 +130,7 @@ router.post('/', (req, res) => {
                     id: id,
                     owner: msg.name,
                     hash: pictureInfo.hash,
-                    data: msg.base,
+                    data: pictureInfo.markedimage_base64,
                     rand_num: pictureInfo.rand_num_base64,
                     r: pictureInfo.r,
                     key: pictureInfo.key,
