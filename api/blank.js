@@ -174,4 +174,13 @@ router.get('/iter', (req, res) => {
     })
 })
 
+router.post('/pic', (req, res) => {
+    const a = req.body.base64[100];
+    res.send({
+        status: 300,
+        message: a
+    });
+    return;
+})
+
 module.exports = router
