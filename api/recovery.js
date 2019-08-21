@@ -40,25 +40,25 @@ router.post('/', (req, res) => {
         }
 
         return new Promise((resolve, reject) => {
-            console.log('Fetching informations of the picture. Params: ');
-            console.log(options.body);
+            console.log('Fetching informations of the picture. Params=BASE64(picture)');
             request(options, (error, response, body) => {
                 if (error) {
                     console.log(error);
                     reject('Cannot get the hash value of picture');
+                    return;
                     //throw new Error('Cannot get the hash value of picture');
                 }
                 console.log('backend response: ');
                 console.log(body);
                 if (typeof(body) === 'string' && body[0] === '<'){
                     reject('smart server error!');
+                    return;
                 }
                 picInfo.hash = JSON.parse(body).hash;
                 resolve();
             })
         }).then(() => {
             return new Promise( (resolve, reject) => {
-                // todo: check or cpcheck?
                 options.url = 'http://127.0.0.1:5000/api/check'
                 options.body = JSON.stringify({
                     id: msg.id,
@@ -69,11 +69,13 @@ router.post('/', (req, res) => {
                     if (error) {
                         console.log(error);
                         reject('Cannot detect whether the picture is edited!');
+                        return;
                     }
                     console.log('backend response 2:');
                     console.log(body);
                     if (typeof(body) === 'string' && body[0] === '<'){
                         reject('smart server error!');
+                        return;
                     }
                     resolve(JSON.parse(body).result);
                 })

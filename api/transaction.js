@@ -45,11 +45,13 @@ router.post('/', (req, res) => {
                 if (error) {
                     console.log(error);
                     reject('Can\'t get the keys.Please checkout if you are signed in.')
+                    return;
                 }
                 console.log('blockchain response: ');
                 console.log(body);
                 if (typeof(body) === 'string' && body[0] === '<'){
                     reject('smart server error!');
+                    return;
                 }
                 tranInfo.publicKey = JSON.parse(body)[0][0];
                 tranInfo.privateKey = JSON.parse(body)[0][1];

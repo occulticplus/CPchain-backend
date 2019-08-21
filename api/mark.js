@@ -48,16 +48,18 @@ router.post('/', (req, res) => {
                 if (error) {
                     console.log(error);
                     reject('Can\'t get marks of the picture!');
+                    return;
                 }
                 //console.log()
                 if (typeof(body) === 'string' && body[0] === '<'){
                     reject('smart server error!');
+                    return;
                 }
                 //console.log(JSON.parse(body).hash);
                 console.log('++++++++++++++++++++++++++++++++++++++');
                 pictureInfo = JSON.parse(body);
                 console.log('backend response :');
-                const params = ['hash', 'rand_num_base64', 'key', 'r', 'logo_base64'];
+                const params = ['hash', 'key', 'r'];
                 console.log('{');
                 params.forEach(r => {
                     console.log(r + ':' + pictureInfo[r]);
@@ -75,12 +77,14 @@ router.post('/', (req, res) => {
                     if (error) {
                         console.log(error);
                         reject('Can\'t get the keys.Please checkout if you are signed in.');
+                        return;
                     }
                     console.log('wallet response: ');
                     console.log(body);
                     console.log('*********************************************');
                     if (typeof(body) === 'string' && body[0] === '<'){
                         reject('smart server error!');
+                        return;
                     }
                     const pk = JSON.parse(body)[0][0];
                     const sk = JSON.parse(body)[0][1];
@@ -104,7 +108,7 @@ router.post('/', (req, res) => {
                 }
             }
             console.log('Marking new Image on blockchain. Params: ');
-            console.log(JSON.stringify(act));
+            console.log(JSON.stringify(act, null, 2));
             return new Api({
                 rpc,
                 signatureProvider : new JsSignatureProvider([pictureInfo.privateKey]),
@@ -118,7 +122,7 @@ router.post('/', (req, res) => {
             });
         }).then((value) => {
             console.log('blockchain response: ');
-            console.log(value);
+            console.log(JSON.stringify(value, null, 2));
             // todo : check the return value.
             console.log('//////////////////////////////');
             const row = {
@@ -147,7 +151,7 @@ router.post('/', (req, res) => {
             return new Promise((resolve, reject) => {
                 options.url = 'http://127.0.0.1:5000/api/save';
                 options.body = {'Content-type' : 'application/json;charset=utf-8'};
-                options.body = JSON.stringify({
+                const wtf = {
                     id: id,
                     owner: msg.name,
                     hash: pictureInfo.hash,
@@ -156,9 +160,13 @@ router.post('/', (req, res) => {
                     r: pictureInfo.r,
                     key: pictureInfo.key,
                     logo: pictureInfo.logo_base64
-                });
+                }
+                options.body = JSON.stringify(wtf);
                 console.log('Saving transactiong records. Params :');
-                console.log(options.body);
+                const params = ['id', 'owner', 'hash', 'r', 'key'];
+                parmas.forEach(r => {
+                    console.log(r + ': ' + wtf[r]);
+                })
                 request(options, (error, response, body) => {
                     try {
                         if (error) {

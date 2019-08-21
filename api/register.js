@@ -42,7 +42,10 @@ router.post('/', async (req, res) => {
             console.log('want to create wallet. params: ');
             console.log(options.body);
             request(options, (error, response, body) => {
-                if (error) reject(error);
+                if (error) {
+                    reject(error);
+                    return;
+                }
                 //walletKey = body;
                 console.log('wallet response 1:');
                 console.log(body);
@@ -56,6 +59,7 @@ router.post('/', async (req, res) => {
                 } else {
                     console.log(body);
                     reject('Error: Cannot create wallet');
+                    return;
                 }
             });
 
@@ -114,7 +118,7 @@ router.post('/', async (req, res) => {
                         },
                     },
                 }
-                console.log(JSON.stringify(act));
+                console.log(JSON.stringify(act, null , 2));
                 return api.transact({
                     actions: [act]
                 }, {
@@ -130,7 +134,7 @@ router.post('/', async (req, res) => {
             }
         }).then(value => {
             console.log('blockchain response: ');
-            console.log(JSON.stringify(value));
+            console.log(JSON.stringify(value, null, 2));
             console.log(accountInfo.privateKey);
             const sigProvider = new JsSignatureProvider([accountInfo.privateKey]);
             const act = {
@@ -147,7 +151,7 @@ router.post('/', async (req, res) => {
                 },
             }
             console.log('Creating new user. Params: ');
-            console.log(JSON.stringify(act));
+            console.log(JSON.stringify(act, null, 2));
             return new Api({ rpc,
                 signatureProvider: sigProvider,
                 textDecoder: new TextDecoder(),
@@ -160,7 +164,7 @@ router.post('/', async (req, res) => {
             });
         }).then(value => {
             console.log('blockchain response2: ');
-            console.log(JSON.stringify(value));
+            console.log(JSON.stringify(value, null, 2));
             Config.userName = walletRet.accountName;
             Config.walletKey = walletRet.walletPassword;
             console.log('Wallet Information :\n' + walletInfo);
