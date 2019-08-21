@@ -23,7 +23,7 @@ $('#check').click(function () {
                 //恢复成功
                   // ret = JSON.parse(data.data);
                   $('#res').html("该图片疑似侵权<br>已为您恢复原图");
-                  $("#img").attr('src',"data:image/jpg;base64," + data.data.base64);
+                  $("#img").attr('src',"data:image/bmp;base64," + data.data.base64);
                   show(1);
               } else if (data.status === 304) {
                   //没有篡改

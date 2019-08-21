@@ -139,7 +139,7 @@ router.post('/', (req, res) => {
             return rpc.get_table_rows(row)
         }).then((value) => {
             console.log('RPC response: ');
-            console.log(value);
+            console.log(JSON.stringify(value, null, 2));
             console.log('````````````````````````````');
             /*
             if (value.rows[0].data.id == null) {
@@ -164,7 +164,7 @@ router.post('/', (req, res) => {
                 options.body = JSON.stringify(wtf);
                 console.log('Saving transactiong records. Params :');
                 const params = ['id', 'owner', 'hash', 'r', 'key'];
-                parmas.forEach(r => {
+                params.forEach(r => {
                     console.log(r + ': ' + wtf[r]);
                 })
                 request(options, (error, response, body) => {
